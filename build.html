@@ -1,0 +1,1864 @@
+<!DOCTYPE html>
+<html lang="mn">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>💙 Дурсамж Builder</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
+    rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    /* ────────────────────────────────────────
+   ROOT & RESET
+──────────────────────────────────────── */
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --ink: #1a2040;
+      --muted: #6b7a99;
+      --line: rgba(100, 130, 200, 0.13);
+      --accent: #4060d0;
+      --accent2: #7fa0f0;
+      --bg: #f7f8fc;
+      --white: #fff;
+      --green: #2a9e68;
+      --red: #c03050;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      overflow: hidden;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font-family: inherit;
+    }
+
+    input[type=date]::-webkit-calendar-picker-indicator {
+      opacity: 0.4;
+      cursor: pointer;
+    }
+
+    /* ────────────────────────────────────────
+   LAYOUT — 3 columns
+──────────────────────────────────────── */
+    .shell {
+      display: grid;
+      grid-template-columns: 260px 1fr 340px;
+      height: 100vh;
+    }
+
+    /* ────────────────────────────────────────
+   LEFT NAV
+──────────────────────────────────────── */
+    .nav {
+      background: var(--white);
+      border-right: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .nav-brand {
+      padding: 22px 20px 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1;
+    }
+
+    .nav-sub {
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      margin-top: 3px;
+    }
+
+    .nav-items {
+      flex: 1;
+      padding: 10px 0;
+      overflow-y: auto;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: background 0.15s;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      color: var(--ink);
+    }
+
+    .nav-item:hover {
+      background: rgba(60, 90, 200, 0.05);
+    }
+
+    .nav-item.on {
+      background: rgba(60, 90, 200, 0.08);
+      color: var(--accent);
+    }
+
+    .nav-item.on .nav-ico {
+      background: var(--accent);
+    }
+
+    .nav-ico {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: rgba(60, 90, 200, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+      transition: background 0.15s;
+    }
+
+    .nav-txt {
+      font-size: 0.83rem;
+      font-weight: 500;
+    }
+
+    .nav-badge {
+      margin-left: auto;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.58rem;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 100px;
+      letter-spacing: 0.04em;
+    }
+
+    .nav-footer {
+      padding: 14px 20px;
+      border-top: 1px solid var(--line);
+    }
+
+    .nav-publish {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.83rem;
+      font-weight: 500;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .nav-publish:hover {
+      transform: translateY(-1px);
+      opacity: 0.92;
+    }
+
+    /* ────────────────────────────────────────
+   CENTER — PANELS
+──────────────────────────────────────── */
+    .center {
+      background: var(--bg);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel {
+      display: none;
+      flex: 1;
+      padding: 28px 32px;
+      max-width: 680px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .panel.on {
+      display: block;
+    }
+
+    .panel-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+
+    .panel-sub {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+
+    /* form elements */
+    .fg {
+      margin-bottom: 18px;
+    }
+
+    .fl {
+      font-size: 0.6rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 6px;
+      display: block;
+      font-weight: 500;
+    }
+
+    .fi {
+      width: 100%;
+      padding: 10px 14px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      font-size: 0.85rem;
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .fi:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(64, 96, 208, 0.08);
+    }
+
+    .fi::placeholder {
+      color: var(--muted);
+      opacity: 0.55;
+    }
+
+    textarea.fi {
+      resize: vertical;
+      line-height: 1.7;
+      min-height: 90px;
+    }
+
+    .fi-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--line);
+      margin: 22px 0;
+    }
+
+    .sec-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      color: var(--ink);
+      margin-bottom: 14px;
+    }
+
+    /* color swatches */
+    .sw-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .sw {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 3px solid transparent;
+      transition: border-color 0.18s, transform 0.15s;
+    }
+
+    .sw:hover {
+      transform: scale(1.1);
+    }
+
+    .sw.on {
+      border-color: var(--ink);
+    }
+
+    /* ── ACTIVITIES ── */
+    .act-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .act-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 11px 14px;
+    }
+
+    .act-e {
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+
+    .act-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .act-t {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .act-d {
+      font-size: 0.72rem;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 1px;
+    }
+
+    .act-del {
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 4px 6px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      opacity: 0.35;
+      transition: opacity 0.2s;
+    }
+
+    .act-del:hover {
+      opacity: 1;
+      color: var(--red);
+    }
+
+    .add-card {
+      background: var(--white);
+      border: 1px dashed rgba(64, 96, 208, 0.22);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .add-card-title {
+      font-size: 0.63rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+
+    .emoji-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .ep {
+      font-size: 1.1rem;
+      padding: 5px 6px;
+      border-radius: 8px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      background: rgba(64, 96, 208, 0.05);
+      transition: border-color 0.15s;
+    }
+
+    .ep.on {
+      border-color: var(--accent);
+    }
+
+    .mini-btn {
+      padding: 9px 18px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+
+    .mini-btn:hover {
+      opacity: 0.88;
+      transform: translateY(-1px);
+    }
+
+    .mini-btn.blue {
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      color: #fff;
+    }
+
+    .mini-btn.ghost {
+      background: none;
+      border: 1px solid var(--line);
+      color: var(--muted);
+    }
+
+    .mini-btn.ghost:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ── PHOTOS ── */
+    .dropzone {
+      border: 2px dashed rgba(64, 96, 208, 0.2);
+      border-radius: 12px;
+      padding: 22px;
+      text-align: center;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+      margin-bottom: 14px;
+    }
+
+    .dropzone:hover,
+    .dropzone.drag {
+      background: rgba(64, 96, 208, 0.04);
+      border-color: rgba(64, 96, 208, 0.35);
+    }
+
+    .dz-icon {
+      font-size: 2rem;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .dz-txt {
+      font-size: 0.75rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+      gap: 8px;
+    }
+
+    .photo-cell {
+      position: relative;
+      aspect-ratio: 1;
+      border-radius: 9px;
+      overflow: hidden;
+      background: var(--line);
+    }
+
+    .photo-cell img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .photo-del {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background: rgba(255, 255, 255, 0.92);
+      border: none;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      font-size: 0.58rem;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--red);
+      font-weight: 600;
+    }
+
+    .photo-cell:hover .photo-del {
+      opacity: 1;
+    }
+
+    /* ── PUBLISH PANEL ── */
+    .pub-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .pub-step {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line);
+      background: var(--white);
+    }
+
+    .pub-step:last-child {
+      border-bottom: none;
+    }
+
+    .ps-num {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .ps-body {
+      flex: 1;
+    }
+
+    .ps-title {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 3px;
+    }
+
+    .ps-desc {
+      font-size: 0.73rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .ps-desc a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .ps-desc a:hover {
+      text-decoration: underline;
+    }
+
+    .ps-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .pub-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      margin-bottom: 20px;
+    }
+
+    .pub-btn {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      transition: opacity 0.18s, transform 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .pub-btn:hover {
+      opacity: 0.88;
+      transform: translateY(-1px);
+    }
+
+    .pub-btn.green {
+      background: linear-gradient(135deg, #3db878, var(--green));
+      color: #fff;
+    }
+
+    .pub-btn.blue-o {
+      background: none;
+      border: 1px solid var(--line);
+      color: var(--muted);
+    }
+
+    .pub-btn.blue-o:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* QR section */
+    .qr-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .qr-divider::before,
+    .qr-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--line);
+    }
+
+    .qr-divider span {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .qr-input-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .qr-input-row input {
+      flex: 1;
+    }
+
+    .qr-go {
+      padding: 10px 16px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity 0.2s;
+    }
+
+    .qr-go:hover {
+      opacity: 0.85;
+    }
+
+    .qr-result {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      margin-top: 14px;
+      display: none;
+      animation: fadeUp 0.4s cubic-bezier(.16, 1, .3, 1);
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    .qr-result.show {
+      display: block;
+    }
+
+    #qrOut {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+
+    #qrOut img,
+    #qrOut canvas {
+      border-radius: 8px;
+    }
+
+    .qr-url-txt {
+      font-size: 0.68rem;
+      color: var(--muted);
+      word-break: break-all;
+      background: var(--bg);
+      padding: 7px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      margin-bottom: 12px;
+    }
+
+    .qr-dl-row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .qr-btn {
+      padding: 8px 18px;
+      border-radius: 100px;
+      font-size: 0.73rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .qr-btn.solid {
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      color: #fff;
+      border: none;
+    }
+
+    .qr-btn.outline {
+      background: none;
+      border: 1px solid var(--line);
+      color: var(--muted);
+    }
+
+    .qr-btn:hover {
+      opacity: 0.82;
+    }
+
+    /* ────────────────────────────────────────
+   RIGHT — LIVE PREVIEW
+──────────────────────────────────────── */
+    .preview-col {
+      background: #e8ecf4;
+      border-left: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .preview-bar {
+      background: var(--white);
+      border-bottom: 1px solid var(--line);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .preview-dots {
+      display: flex;
+      gap: 5px;
+    }
+
+    .pd {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+    }
+
+    .pd1 {
+      background: #ff5f57;
+    }
+
+    .pd2 {
+      background: #febc2e;
+    }
+
+    .pd3 {
+      background: #28c840;
+    }
+
+    .preview-label {
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-right: auto;
+    }
+
+    .preview-refresh {
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: background 0.15s;
+    }
+
+    .preview-refresh:hover {
+      background: var(--line);
+      color: var(--ink);
+    }
+
+    .preview-frame-wrap {
+      flex: 1;
+      padding: 12px;
+      overflow: hidden;
+    }
+
+    .preview-frame {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      background: var(--white);
+    }
+
+    /* ── HERO STRIP (mini preview in nav) ── */
+    .hero-strip {
+      height: 52px;
+      margin: 0 20px 14px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      transition: background 0.5s;
+    }
+
+    .hero-strip-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 300;
+      color: #fff;
+      letter-spacing: 0.12em;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--ink);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      z-index: 9999;
+      animation: toastIn 0.3s ease;
+      pointer-events: none;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    @keyframes toastIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:1100px) {
+      .shell {
+        grid-template-columns: 220px 1fr;
+      }
+
+      .preview-col {
+        display: none;
+      }
+    }
+
+    @media(max-width:700px) {
+      .shell {
+        grid-template-columns: 1fr;
+      }
+
+      .nav {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+
+    <!-- ════ LEFT NAV ════ -->
+    <div class="nav">
+      <div class="nav-brand">
+        <div class="nav-logo">💙 Builder</div>
+        <div class="nav-sub">Дурсамжийн сайт үүсгэгч</div>
+      </div>
+
+      <!-- mini hero strip -->
+      <div style="padding:14px 0 0;">
+        <div class="hero-strip" id="heroStrip" style="background:linear-gradient(135deg,#1a2a6c,#5b8fe8)">
+          <span class="hero-strip-name" id="heroStripName">Нэр</span>
+        </div>
+      </div>
+
+      <div class="nav-items">
+        <button class="nav-item on" onclick="goPanel('info')">
+          <div class="nav-ico">✏️</div>
+          <span class="nav-txt">Үндсэн мэдээлэл</span>
+        </button>
+        <button class="nav-item" onclick="goPanel('acts')">
+          <div class="nav-ico">🎯</div>
+          <span class="nav-txt">Хамтдаа хийсэн зүйл</span>
+          <span class="nav-badge" id="actBadge">3</span>
+        </button>
+        <button class="nav-item" onclick="goPanel('photo')">
+          <div class="nav-ico">📷</div>
+          <span class="nav-txt">Зургууд</span>
+          <span class="nav-badge" id="photoBadge">0</span>
+        </button>
+        <button class="nav-item" onclick="goPanel('feel')">
+          <div class="nav-ico">💙</div>
+          <span class="nav-txt">Мэдрэмжүүд</span>
+          <span class="nav-badge" id="feelBadge">0</span>
+        </button>
+        <button class="nav-item" onclick="goPanel('pub')">
+          <div class="nav-ico">🚀</div>
+          <span class="nav-txt">Нийтлэх + QR</span>
+        </button>
+      </div>
+
+      <div class="nav-footer">
+        <button class="nav-publish" onclick="exportSite()">💾 &nbsp; site.html татах</button>
+      </div>
+    </div>
+
+    <!-- ════ CENTER ════ -->
+    <div class="center">
+
+      <!-- INFO -->
+      <div class="panel on" id="panel-info">
+        <div class="panel-title">Үндсэн мэдээлэл</div>
+        <div class="panel-sub">Сайтын нэр, текстүүдийг бөглөнө үү. Preview баруун талд шууд харагдана.</div>
+
+        <div class="fi-row">
+          <div class="fg"><label class="fl">Охины нэр</label>
+            <input class="fi" id="f_name" placeholder="Энэрэл" maxlength="30">
+          </div>
+          <div class="fg"><label class="fl">Гарын үсэг</label>
+            <input class="fi" id="f_sig" placeholder="— чиний найзаас 💙" maxlength="60">
+          </div>
+        </div>
+        <div class="fg"><label class="fl">Hero дэд текст</label>
+          <input class="fi" id="f_sub" placeholder="чамтай хамт байсан цагуудыг санан" maxlength="70">
+        </div>
+        <div class="fg"><label class="fl">Hero жижиг текст</label>
+          <input class="fi" id="f_intro" placeholder="Теннис, зургийн клуб, шатар — чамтай хийсэн учраас санаж байна 💙"
+            maxlength="130">
+        </div>
+        <div class="fg"><label class="fl">Анх уулзсан огноо — countdown</label>
+          <input class="fi" type="date" id="f_date">
+        </div>
+
+        <div class="divider"></div>
+        <div class="sec-label">Захидал</div>
+        <div class="fi-row">
+          <div class="fg"><label class="fl">Мэндчилгээ</label>
+            <input class="fi" id="f_lto" placeholder="Энэрэл," maxlength="40">
+          </div>
+          <div class="fg"><label class="fl">Нууц үг (заавал биш)</label>
+            <input class="fi" type="password" id="f_pw" placeholder="Хоосон = нээлттэй">
+          </div>
+        </div>
+        <div class="fg"><label class="fl">Захидлын текст</label>
+          <textarea class="fi" id="f_letter" rows="5" placeholder="Захидлаа бич..."></textarea>
+        </div>
+
+        <div class="divider"></div>
+        <div class="fg"><label class="fl">Нууц захиа — зөвхөн тэр товчийг дарахад харагдана</label>
+          <textarea class="fi" id="f_hidden" rows="3" placeholder="Жинхэнэ мэдрэмжээ бич..."></textarea>
+        </div>
+        <div class="fg"><label class="fl">Footer үг</label>
+          <input class="fi" id="f_quote" placeholder="Энгийн зүйлс байсан, гэхдээ чамтай байсан" maxlength="90">
+        </div>
+
+        <div class="divider"></div>
+        <div class="sec-label">Өнгөний сэдэв</div>
+        <div class="fg">
+          <div class="sw-row" id="swRow">
+            <div class="sw on" data-c1="#1a2a6c" data-c2="#2d5dbf" data-c3="#5b8fe8" data-ac="#4a7de0" data-bl="#c5d8ff"
+              style="background:linear-gradient(135deg,#1a2a6c,#5b8fe8)" title="Цэнхэр"></div>
+            <div class="sw" data-c1="#1a0a3e" data-c2="#6b2fa0" data-c3="#b06de0" data-ac="#9b4dd6" data-bl="#e0c8ff"
+              style="background:linear-gradient(135deg,#1a0a3e,#b06de0)" title="Нил ягаан"></div>
+            <div class="sw" data-c1="#0a2e1e" data-c2="#1a7a4a" data-c3="#3db878" data-ac="#2eaa6a" data-bl="#b8ffd8"
+              style="background:linear-gradient(135deg,#0a2e1e,#3db878)" title="Ногоон"></div>
+            <div class="sw" data-c1="#2e1a0a" data-c2="#c0622a" data-c3="#e8924a" data-ac="#d4773a" data-bl="#ffd8b8"
+              style="background:linear-gradient(135deg,#2e1a0a,#e8924a)" title="Улбар шар"></div>
+            <div class="sw" data-c1="#1a1a2e" data-c2="#c0304a" data-c3="#e8607a" data-ac="#d44060" data-bl="#ffc8d0"
+              style="background:linear-gradient(135deg,#1a1a2e,#e8607a)" title="Улаан"></div>
+          </div>
+        </div>
+        <div style="margin-top:4px;">
+          <button class="mini-btn blue" onclick="refresh()" style="width:100%;">👁 Preview шинэчлэх</button>
+        </div>
+      </div>
+
+      <!-- ACTIVITIES -->
+      <div class="panel" id="panel-acts">
+        <div class="panel-title">Хамтдаа хийсэн зүйлс</div>
+        <div class="panel-sub">Хамтдаа хийж байсан зүйлсийг нэм. Картын хэлбэрээр сайт дотор харагдана.</div>
+
+        <div class="act-list" id="actList"></div>
+
+        <div class="add-card">
+          <div class="add-card-title">+ Шинэ зүйл нэм</div>
+          <div class="emoji-row" id="actErow">
+            <span class="ep on" data-e="🎾">🎾</span><span class="ep" data-e="🎨">🎨</span><span class="ep"
+              data-e="♟️">♟️</span>
+            <span class="ep" data-e="🎬">🎬</span><span class="ep" data-e="🎵">🎵</span><span class="ep"
+              data-e="📚">📚</span>
+            <span class="ep" data-e="🏃">🏃</span><span class="ep" data-e="🍜">🍜</span><span class="ep"
+              data-e="☕">☕</span>
+            <span class="ep" data-e="🌙">🌙</span><span class="ep" data-e="✨">✨</span><span class="ep"
+              data-e="💙">💙</span>
+          </div>
+          <div class="fi-row" style="margin-bottom:8px;">
+            <input class="fi" id="act_t" placeholder="Гарчиг" maxlength="50">
+            <input class="fi" id="act_sub" placeholder="Хэзээ (заавал биш)" maxlength="30">
+          </div>
+          <textarea class="fi" id="act_d" rows="2" placeholder="Тайлбар..." style="margin-bottom:10px;"></textarea>
+          <button class="mini-btn blue" onclick="addAct()">Нэмэх</button>
+        </div>
+      </div>
+
+      <!-- PHOTOS -->
+      <div class="panel" id="panel-photo">
+        <div class="panel-title">Зургууд</div>
+        <div class="panel-sub">Дурсамжийн зургуудаа нэм. Автоматаар жижигрүүлж хадгална — refresh хийсэн ч үлдэнэ.</div>
+
+        <div class="dropzone" id="dropzone" onclick="document.getElementById('pInput').click()">
+          <span class="dz-icon">📷</span>
+          <div class="dz-txt">Зургуудаа энд дар эсвэл чирж тавь<br>
+            <span style="font-size:0.65rem;opacity:0.5;">JPG, PNG — автоматаар 1200px болгон жижигрүүлнэ</span>
+          </div>
+        </div>
+        <input type="file" id="pInput" multiple accept="image/*" style="display:none">
+        <div class="photo-grid" id="photoGrid"></div>
+      </div>
+
+      <!-- FEELINGS -->
+      <div class="panel" id="panel-feel">
+        <div class="panel-title">Мэдрэмжүүд</div>
+        <div class="panel-sub">Дурсамж, мэдрэмж, санасан зүйлсийг нэм. Сайт дотор тусгай хэсэг болж харагдана.</div>
+
+        <div class="act-list" id="feelList"></div>
+
+        <div class="add-card">
+          <div class="add-card-title">+ Мэдрэмж нэм</div>
+          <div class="emoji-row" id="feelErow">
+            <span class="ep on" data-e="💙">💙</span><span class="ep" data-e="✨">✨</span>
+            <span class="ep" data-e="🌙">🌙</span><span class="ep" data-e="🌸">🌸</span>
+            <span class="ep" data-e="⭐">⭐</span><span class="ep" data-e="💫">💫</span>
+            <span class="ep" data-e="🎾">🎾</span><span class="ep" data-e="🎨">🎨</span>
+            <span class="ep" data-e="♟️">♟️</span><span class="ep" data-e="☀️">☀️</span>
+          </div>
+          <textarea class="fi" id="feel_t" rows="3"
+            placeholder="Жишээ: Хамтдаа теннис тоглоход хэзээ ч хожиж чаддаггүй байсан ч — хамтдаа ирдэг байсан нь хамгийн сайхан байсан 💙"
+            style="margin-bottom:10px;"></textarea>
+          <button class="mini-btn blue" onclick="addFeel()">Нэмэх</button>
+        </div>
+      </div>
+
+      <!-- PUBLISH -->
+      <div class="panel" id="panel-pub">
+        <div class="panel-title">Нийтлэх + QR код</div>
+        <div class="panel-sub">Сайтаа интернет дээр тавиад QR кодыг бэлдэж Мартын 8-ны бэлэгтэй хамт өг 🎁</div>
+
+        <div class="pub-steps">
+          <div class="pub-step">
+            <div class="ps-num">1</div>
+            <div class="ps-body">
+              <div class="ps-title">site.html татаж авах</div>
+              <div class="ps-desc">Доорх ногоон товчийг дарна. Бүх зураг, мэдрэмж, өнгө бүгд нэг файлд багтсан байна.
+              </div>
+            </div>
+            <div class="ps-icon">💾</div>
+          </div>
+          <div class="pub-step">
+            <div class="ps-num">2</div>
+            <div class="ps-body">
+              <div class="ps-title">Netlify Drop-д тавих</div>
+              <div class="ps-desc">
+                <a href="https://app.netlify.com/drop" target="_blank">app.netlify.com/drop</a> → нээгдэхэд site.html-г
+                тэр хуудас руу чирж тавь → хэдхэн секундэд URL гарна.<br>
+                <strong style="color:var(--green);">Бүртгэл шаардлагагүй. Үнэгүй. 30 секунд.</strong>
+              </div>
+            </div>
+            <div class="ps-icon">🌐</div>
+          </div>
+          <div class="pub-step">
+            <div class="ps-num">3</div>
+            <div class="ps-body">
+              <div class="ps-title">URL оруулаад QR гарга</div>
+              <div class="ps-desc">Netlify-аас авсан URL-г доор оруул → QR татаж хэвлэ → бэлэгтэй хамт өг 🎁</div>
+            </div>
+            <div class="ps-icon">📱</div>
+          </div>
+        </div>
+
+        <div class="pub-actions">
+          <button class="pub-btn green" onclick="exportSite()">💾 &nbsp; site.html татах</button>
+          <button class="pub-btn blue-o" onclick="window.open('https://app.netlify.com/drop','_blank')">🌐 &nbsp;
+            Netlify Drop нээх</button>
+        </div>
+
+        <div class="qr-divider"><span>URL → QR код</span></div>
+        <div class="qr-input-row">
+          <input class="fi" id="urlInput" type="url" placeholder="https://amazing-name-123.netlify.app">
+          <button class="qr-go" onclick="makeQR()">QR үүсгэх</button>
+        </div>
+
+        <div class="qr-result" id="qrResult">
+          <div id="qrOut"></div>
+          <div class="qr-url-txt" id="qrUrlTxt"></div>
+          <div class="qr-dl-row">
+            <button class="qr-btn solid" onclick="downloadQR()">⬇ PNG татах</button>
+            <button class="qr-btn outline" onclick="copyQRUrl()">🔗 URL хуулах</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /center -->
+
+    <!-- ════ RIGHT PREVIEW ════ -->
+    <div class="preview-col">
+      <div class="preview-bar">
+        <div class="preview-dots">
+          <div class="pd pd1"></div>
+          <div class="pd pd2"></div>
+          <div class="pd pd3"></div>
+        </div>
+        <div class="preview-label">Шууд Preview</div>
+        <button class="preview-refresh" onclick="refresh()">↺ Шинэчлэх</button>
+      </div>
+      <div class="preview-frame-wrap">
+        <iframe class="preview-frame" id="previewFrame" sandbox="allow-same-origin allow-scripts"></iframe>
+      </div>
+    </div>
+
+  </div><!-- /shell -->
+
+  <script>
+    /* ════════════════════════════════════════
+       STORAGE
+    ════════════════════════════════════════ */
+    const S = {
+      g(k) { try { return JSON.parse(localStorage.getItem('bld_' + k)); } catch { return null; } },
+      s(k, v) { try { localStorage.setItem('bld_' + k, JSON.stringify(v)); } catch { } }
+    };
+
+    /* ════════════════════════════════════════
+       STATE
+    ════════════════════════════════════════ */
+    let acts = S.g('acts') || [
+      { id: 1, emoji: '🎾', title: 'Агаарын Теннис', sub: '2 жилийн өмнө', desc: 'Хамтдаа теннис тоглодог байсан. Хэн илүү муу байсан бол мэдэхгүй ч хамтдаа ирдэг байсан нь хөгжилтэй байсан.' },
+      { id: 2, emoji: '🎨', title: 'Зургийн Клуб', sub: 'Хамтын бүтээл', desc: 'Зургийн клубт хамтдаа явдаг байсан. Ямар зүйл зурдаг байсан бол — чи санаж байна уу? 😄' },
+      { id: 3, emoji: '♟️', title: 'Шатрын Тоглоом', sub: 'Хэн хожсон бэ?', desc: 'Хамтдаа шатар тоглодог байсан. Хэн ихэвчлэн хожсон бол — тэр асуулт л үлдлээ 😏' }
+    ];
+    let photos = S.g('photos') || [];
+    let feelings = S.g('feelings') || [];
+    let cfg = S.g('cfg') || {};
+    let nA = Math.max(0, ...acts.map(a => a.id)) + 1;
+    let nF = Math.max(0, ...(feelings.length ? feelings.map(f => f.id) : [0])) + 1;
+    let sAE = '🎾', sFE = '💙';
+    let lastQRUrl = '';
+
+    /* ════════════════════════════════════════
+       INIT
+    ════════════════════════════════════════ */
+    window.addEventListener('load', () => {
+      // restore form values
+      const f = id => document.getElementById(id);
+      f('f_name').value = cfg.name || '';
+      f('f_sig').value = cfg.sig || '';
+      f('f_sub').value = cfg.sub || '';
+      f('f_intro').value = cfg.intro || '';
+      f('f_date').value = cfg.date || '';
+      f('f_lto').value = cfg.lto || '';
+      f('f_pw').value = cfg.pw || '';
+      f('f_letter').value = cfg.letter || '';
+      f('f_hidden').value = cfg.hidden || '';
+      f('f_quote').value = cfg.quote || '';
+
+      // restore color
+      if (cfg.ac) {
+        document.querySelectorAll('.sw').forEach(s => {
+          s.classList.toggle('on', s.dataset.ac === cfg.ac);
+        });
+      }
+
+      // emoji pickers
+      initErow('#actErow', e => sAE = e);
+      initErow('#feelErow', e => sFE = e);
+
+      // color swatch clicks
+      document.querySelectorAll('.sw').forEach(s => s.addEventListener('click', () => {
+        document.querySelectorAll('.sw').forEach(x => x.classList.remove('on'));
+        s.classList.add('on');
+        saveCfg(); updateStrip(); refresh();
+      }));
+
+      // auto-save on any input change
+      ['f_name', 'f_sig', 'f_sub', 'f_intro', 'f_date', 'f_lto', 'f_pw', 'f_letter', 'f_hidden', 'f_quote'].forEach(id => {
+        document.getElementById(id).addEventListener('input', () => {
+          saveCfg(); updateStrip();
+        });
+      });
+
+      // photo upload
+      document.getElementById('pInput').addEventListener('change', e => {
+        handlePhotos(Array.from(e.target.files));
+        e.target.value = '';
+      });
+      const dz = document.getElementById('dropzone');
+      dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag'); });
+      dz.addEventListener('dragleave', () => dz.classList.remove('drag'));
+      dz.addEventListener('drop', e => {
+        e.preventDefault(); dz.classList.remove('drag');
+        handlePhotos(Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/')));
+      });
+
+      renderActs(); renderPhotos(); renderFeelings();
+      updateStrip(); refresh();
+    });
+
+    /* ════════════════════════════════════════
+       NAVIGATION
+    ════════════════════════════════════════ */
+    const PANELS = ['info', 'acts', 'photo', 'feel', 'pub'];
+    function goPanel(key) {
+      document.querySelectorAll('.nav-item').forEach((el, i) => el.classList.toggle('on', PANELS[i] === key));
+      document.querySelectorAll('.panel').forEach(el => el.classList.remove('on'));
+      document.getElementById('panel-' + key).classList.add('on');
+    }
+
+    /* ════════════════════════════════════════
+       CONFIG SAVE
+    ════════════════════════════════════════ */
+    function saveCfg() {
+      const sw = document.querySelector('.sw.on') || document.querySelector('.sw');
+      cfg = {
+        name: document.getElementById('f_name').value.trim(),
+        sig: document.getElementById('f_sig').value.trim(),
+        sub: document.getElementById('f_sub').value.trim(),
+        intro: document.getElementById('f_intro').value.trim(),
+        date: document.getElementById('f_date').value,
+        lto: document.getElementById('f_lto').value.trim(),
+        pw: document.getElementById('f_pw').value,
+        letter: document.getElementById('f_letter').value,
+        hidden: document.getElementById('f_hidden').value.trim(),
+        quote: document.getElementById('f_quote').value.trim(),
+        c1: sw.dataset.c1, c2: sw.dataset.c2, c3: sw.dataset.c3,
+        ac: sw.dataset.ac, bl: sw.dataset.bl
+      };
+      S.s('cfg', cfg);
+    }
+
+    function updateStrip() {
+      const n = document.getElementById('f_name').value || 'Нэр';
+      document.getElementById('heroStripName').textContent = n;
+      const sw = document.querySelector('.sw.on');
+      if (sw) document.getElementById('heroStrip').style.background =
+        `linear-gradient(135deg,${sw.dataset.c1},${sw.dataset.c3})`;
+    }
+
+    /* ════════════════════════════════════════
+       ACTIVITIES
+    ════════════════════════════════════════ */
+    function renderActs() {
+      document.getElementById('actList').innerHTML = acts.map(a => `
+    <div class="act-row">
+      <div class="act-e">${a.emoji}</div>
+      <div class="act-info">
+        <div class="act-t">${esc(a.title)}${a.sub ? ` <span style="font-size:0.7rem;color:var(--muted);font-weight:400;">· ${esc(a.sub)}</span>` : ''}</div>
+        <div class="act-d">${esc(a.desc)}</div>
+      </div>
+      <button class="act-del" onclick="delAct(${a.id})">✕</button>
+    </div>`).join('');
+      document.getElementById('actBadge').textContent = acts.length;
+    }
+    function delAct(id) {
+      if (!confirm('Устгах уу?')) return;
+      acts = acts.filter(a => a.id !== id);
+      S.s('acts', acts); renderActs();
+    }
+    function addAct() {
+      const t = document.getElementById('act_t').value.trim();
+      if (!t) { document.getElementById('act_t').focus(); return; }
+      acts.push({
+        id: nA++, emoji: sAE, title: t,
+        sub: document.getElementById('act_sub').value.trim(),
+        desc: document.getElementById('act_d').value.trim() || '...'
+      });
+      S.s('acts', acts);
+      document.getElementById('act_t').value = '';
+      document.getElementById('act_sub').value = '';
+      document.getElementById('act_d').value = '';
+      renderActs(); toast('✅ Нэмэгдлээ');
+    }
+
+    /* ════════════════════════════════════════
+       PHOTOS
+    ════════════════════════════════════════ */
+    function resizeImg(file, cb) {
+      const r = new FileReader();
+      r.onload = ev => {
+        const img = new Image();
+        img.onload = () => {
+          let w = img.width, h = img.height, mx = 1200;
+          if (w > mx || h > mx) { const s = Math.min(mx / w, mx / h); w = Math.round(w * s); h = Math.round(h * s); }
+          const c = document.createElement('canvas');
+          c.width = w; c.height = h;
+          c.getContext('2d').drawImage(img, 0, 0, w, h);
+          cb(c.toDataURL('image/jpeg', 0.82));
+        };
+        img.src = ev.target.result;
+      };
+      r.readAsDataURL(file);
+    }
+    function handlePhotos(files) {
+      if (!files.length) return;
+      let done = 0;
+      files.forEach(f => resizeImg(f, b64 => {
+        photos.push(b64); done++;
+        if (done === files.length) { S.s('photos', photos); renderPhotos(); toast(`📷 ${done} зураг нэмэгдлээ`); }
+      }));
+    }
+    function renderPhotos() {
+      document.getElementById('photoGrid').innerHTML = photos.map((src, i) => `
+    <div class="photo-cell">
+      <img src="${src}" alt="">
+      <button class="photo-del" onclick="delPhoto(${i})">✕</button>
+    </div>`).join('');
+      document.getElementById('photoBadge').textContent = photos.length;
+    }
+    function delPhoto(i) {
+      if (!confirm('Зургийг устгах уу?')) return;
+      photos.splice(i, 1); S.s('photos', photos); renderPhotos();
+    }
+
+    /* ════════════════════════════════════════
+       FEELINGS
+    ════════════════════════════════════════ */
+    function renderFeelings() {
+      document.getElementById('feelList').innerHTML = feelings.map(f => `
+    <div class="act-row">
+      <div class="act-e">${f.emoji}</div>
+      <div class="act-info"><div class="act-t" style="font-weight:400;font-size:0.82rem;">${esc(f.text)}</div></div>
+      <button class="act-del" onclick="delFeel(${f.id})">✕</button>
+    </div>`).join('');
+      document.getElementById('feelBadge').textContent = feelings.length;
+    }
+    function delFeel(id) {
+      feelings = feelings.filter(f => f.id !== id);
+      S.s('feelings', feelings); renderFeelings();
+    }
+    function addFeel() {
+      const t = document.getElementById('feel_t').value.trim();
+      if (!t) { document.getElementById('feel_t').focus(); return; }
+      feelings.push({ id: nF++, emoji: sFE, text: t });
+      S.s('feelings', feelings);
+      document.getElementById('feel_t').value = '';
+      renderFeelings(); toast('💙 Нэмэгдлээ');
+    }
+
+    /* ════════════════════════════════════════
+       EMOJI PICKER HELPER
+    ════════════════════════════════════════ */
+    function initErow(sel, cb) {
+      document.querySelectorAll(sel + ' .ep').forEach(e => e.addEventListener('click', () => {
+        document.querySelectorAll(sel + ' .ep').forEach(x => x.classList.remove('on'));
+        e.classList.add('on'); cb(e.dataset.e);
+      }));
+    }
+
+    /* ════════════════════════════════════════
+       PREVIEW REFRESH
+    ════════════════════════════════════════ */
+    function refresh() {
+      saveCfg();
+      document.getElementById('previewFrame').srcdoc = buildSiteHTML();
+    }
+
+    /* ════════════════════════════════════════
+       EXPORT
+    ════════════════════════════════════════ */
+    function exportSite() {
+      saveCfg();
+      const html = buildSiteHTML();
+      const blob = new Blob([html], { type: 'text/html' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'site.html';
+      a.click();
+      toast('💾 site.html татагдлаа!');
+      setTimeout(() => goPanel('pub'), 900);
+    }
+
+    /* ════════════════════════════════════════
+       QR
+    ════════════════════════════════════════ */
+    function makeQR() {
+      const url = document.getElementById('urlInput').value.trim();
+      if (!url) { document.getElementById('urlInput').focus(); return; }
+      lastQRUrl = url;
+      const out = document.getElementById('qrOut');
+      out.innerHTML = '';
+      new QRCode(out, {
+        text: url, width: 200, height: 200,
+        colorDark: '#1a2040', colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M
+      });
+      document.getElementById('qrUrlTxt').textContent = url;
+      document.getElementById('qrResult').classList.add('show');
+      setTimeout(() => document.getElementById('qrResult').scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+    }
+    function downloadQR() {
+      const el = document.querySelector('#qrOut canvas') || document.querySelector('#qrOut img');
+      if (!el) return;
+      const a = document.createElement('a');
+      a.download = 'qr-duusamj.png';
+      a.href = el.tagName === 'CANVAS' ? el.toDataURL() : el.src;
+      a.click();
+      toast('🎉 QR PNG татагдлаа!');
+    }
+    function copyQRUrl() {
+      navigator.clipboard && navigator.clipboard.writeText(lastQRUrl).then(() => toast('🔗 URL хуулагдлаа'));
+    }
+
+    /* ════════════════════════════════════════
+       TOAST
+    ════════════════════════════════════════ */
+    function toast(msg) {
+      const t = document.createElement('div');
+      t.className = 'toast'; t.textContent = msg;
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 2400);
+    }
+
+    /* ════════════════════════════════════════
+       ESCAPE HELPER
+    ════════════════════════════════════════ */
+    function esc(s) {
+      return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    /* ════════════════════════════════════════
+       BUILD SITE HTML
+    ════════════════════════════════════════ */
+    function buildSiteHTML() {
+      const c = cfg;
+      const N = esc(c.name || 'Дурсамж');
+      const SUB = esc(c.sub || '');
+      const INT = esc(c.intro || '');
+      const LTO = esc(c.lto || (c.name + ','));
+      const LET = esc(c.letter || '');
+      const SIG = esc(c.sig || '');
+      const HID = esc(c.hidden || '');
+      const QUO = esc(c.quote || '');
+      const PW = c.pw || '';
+      const C1 = c.c1 || '#1a2a6c';
+      const C2 = c.c2 || '#2d5dbf';
+      const C3 = c.c3 || '#5b8fe8';
+      const AC = c.ac || '#4a7de0';
+      const BL = c.bl || '#c5d8ff';
+
+      const actsHTML = acts.map(a => `
+<div class="card rv" style="animation-delay:${acts.indexOf(a) * 0.1}s">
+  <span class="card-e">${a.emoji}</span>
+  <div class="card-sub">${esc(a.sub || '')}</div>
+  <h3 class="card-t">${esc(a.title)}</h3>
+  <p class="card-d">${esc(a.desc)}</p>
+</div>`).join('');
+
+      const feelHTML = feelings.map(f => `
+<div class="feel-card rv">
+  <span class="feel-e">${f.emoji}</span>
+  <p class="feel-t">${esc(f.text)}</p>
+</div>`).join('');
+
+      const photoHTML = photos.map((src, i) =>
+        `<div class="p-item"><img src="${src}" onclick="openLb(${i})" alt=""></div>`
+      ).join('');
+
+      const photosJS = photos.map(p => JSON.stringify(p)).join(',');
+
+      return `<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="description" content="${N} — Дурсамжийн сайт">
+<meta property="og:title" content="${N} 💙">
+<title>${N} 💙</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f0f4ff;--ac:${AC};--c2:${C3};--deep:#1a2a5e;--mu:#8a9ac7;--card:rgba(255,255,255,0.74);}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--deep);font-family:'DM Sans',sans-serif;overflow-x:hidden;cursor:none;}
+
+/* LOADER */
+#ldr{position:fixed;inset:0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:18px;transition:opacity 1.2s cubic-bezier(.16,1,.3,1),transform 1.2s;}
+#ldr.gone{opacity:0;pointer-events:none;transform:scale(1.04);}
+.lname{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,10vw,5.5rem);font-weight:300;color:var(--deep);letter-spacing:0.12em;animation:lpulse 1.5s ease infinite;}
+@keyframes lpulse{0%,100%{opacity:1;}50%{opacity:0.28;}}
+.lbar{width:0;height:1px;background:linear-gradient(90deg,transparent,var(--ac),transparent);animation:lbar 1.5s ease forwards;}
+@keyframes lbar{to{width:200px;}}
+.lsub{font-size:0.6rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--mu);}
+
+${PW ? `/* PASSWORD */
+#pwg{position:fixed;inset:0;z-index:8800;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:linear-gradient(160deg,${C1},${C2},${C3});}
+#pwg.show{display:flex;}
+.pwname{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,10vw,6rem);font-weight:300;color:#fff;letter-spacing:0.1em;}
+.pwsub{font-size:0.68rem;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.48);}
+.pwrow{display:flex;gap:9px;margin-top:6px;}
+.pwinput{padding:13px 18px;border-radius:11px;border:1px solid rgba(255,255,255,0.22);background:rgba(255,255,255,0.12);backdrop-filter:blur(10px);color:#fff;font-family:'DM Sans',sans-serif;font-size:1rem;outline:none;letter-spacing:0.15em;text-align:center;width:170px;}
+.pwinput::placeholder{color:rgba(255,255,255,0.38);letter-spacing:0.05em;}
+.pwbtn{padding:13px 18px;border-radius:11px;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.25);color:#fff;font-family:'DM Sans',sans-serif;cursor:pointer;transition:background 0.2s;}
+.pwbtn:hover{background:rgba(255,255,255,0.26);}
+.pwerr{font-size:0.7rem;color:rgba(255,180,180,0.9);min-height:16px;}` : ''}
+
+/* CURSOR */
+.cur{position:fixed;width:8px;height:8px;background:var(--ac);border-radius:50%;pointer-events:none;z-index:8000;transform:translate(-50%,-50%);}
+.curg{position:fixed;width:30px;height:30px;border-radius:50%;background:rgba(120,160,255,0.26);pointer-events:none;z-index:7999;transform:translate(-50%,-50%);filter:blur(7px);}
+
+/* MUSIC */
+.mbtn{position:fixed;right:18px;bottom:18px;width:50px;height:50px;border-radius:50%;border:1px solid rgba(180,210,255,0.38);background:var(--card);backdrop-filter:blur(18px);box-shadow:0 6px 26px rgba(120,160,240,0.2);cursor:none;z-index:500;font-size:1.2rem;display:flex;align-items:center;justify-content:center;transition:transform 0.3s;}
+.mbtn:hover{transform:scale(1.1);}
+.mbtn.play{animation:mpulse 2s ease infinite;}
+@keyframes mpulse{0%,100%{box-shadow:0 0 0 0 rgba(120,160,255,0.35);}50%{box-shadow:0 0 0 11px rgba(120,160,255,0);}}
+
+/* HEARTS */
+.hrt{position:fixed;bottom:-20px;pointer-events:none;z-index:2;animation:hup 8s linear forwards;opacity:0;}
+@keyframes hup{0%{opacity:0;}8%{opacity:0.46;}50%{transform:translateY(-50vh);opacity:0.3;}100%{transform:translateY(-115vh);opacity:0;}}
+
+/* CONFETTI */
+.cof{position:fixed;top:-20px;pointer-events:none;z-index:9000;border-radius:2px;animation:cffall linear forwards;}
+@keyframes cffall{to{transform:translateY(105vh) rotate(720deg);opacity:0;}}
+
+/* BG BLOBS */
+.bgl{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:0.25;animation:bfloat linear infinite;}
+.b1{width:500px;height:500px;background:${BL};top:-110px;left:-70px;animation-duration:22s;}
+.b2{width:400px;height:400px;background:${BL};bottom:4%;right:-55px;animation-duration:28s;animation-delay:-10s;}
+.b3{width:300px;height:300px;background:${BL};top:38%;left:26%;animation-duration:19s;animation-delay:-5s;}
+@keyframes bfloat{0%,100%{transform:translateY(0) scale(1);}33%{transform:translateY(-25px) scale(1.04);}66%{transform:translateY(17px) scale(0.97);}}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(36px);transition:opacity 1s cubic-bezier(.16,1,.3,1),transform 1s cubic-bezier(.16,1,.3,1);}
+.rv.show{opacity:1;transform:none;}
+
+/* HERO */
+.hero{position:relative;z-index:1;min-height:100vh;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 24px;}
+.hbg{position:absolute;inset:0;z-index:-1;transform:scale(1.06);animation:hzoom 20s linear infinite alternate;background:linear-gradient(160deg,${C1} 0%,${C1}cc 20%,${C2} 50%,${C3} 72%,${BL} 100%);}
+.hbg::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(255,255,255,0.06),transparent 70%),linear-gradient(to bottom,rgba(0,0,0,0.07),rgba(5,15,50,0.56));}
+@keyframes hzoom{from{transform:scale(1.06);}to{transform:scale(1.22);}}
+.stars{position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(1px 1px at 12% 18%,rgba(255,255,255,0.8),transparent),radial-gradient(1px 1px at 37% 9%,rgba(255,255,255,0.6),transparent),radial-gradient(1px 1px at 68% 26%,rgba(255,255,255,0.7),transparent),radial-gradient(1px 1px at 82% 13%,rgba(255,255,255,0.5),transparent),radial-gradient(2px 2px at 23% 55%,rgba(255,255,255,0.36),transparent),radial-gradient(1px 1px at 91% 44%,rgba(255,255,255,0.55),transparent);}
+.hcon{position:relative;z-index:2;}
+.hey{font-size:0.68rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-bottom:18px;animation:fdown 1s 2s both;}
+.hname{font-family:'Cormorant Garamond',serif;font-size:clamp(5rem,14vw,11rem);font-weight:300;line-height:1;color:#fff;letter-spacing:0.1em;text-shadow:0 4px 56px rgba(100,150,255,0.45);animation:fdown 1s 2.2s both;position:relative;display:inline-block;}
+.hname::after{content:'';position:absolute;bottom:-5px;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.5),transparent);animation:lscale 1.2s 3s both;transform-origin:center;transform:scaleX(0);}
+@keyframes lscale{to{transform:scaleX(1);}}
+.hsub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.1rem,3vw,1.65rem);color:rgba(255,255,255,0.5);margin-top:18px;animation:fdown 1s 2.4s both;}
+.hint{max-width:440px;font-size:0.86rem;line-height:1.9;color:rgba(255,255,255,0.4);margin:24px auto 0;animation:fdown 1s 2.6s both;}
+.cdw{display:flex;gap:22px;justify-content:center;margin-top:32px;animation:fdown 1s 2.8s both;}
+.cdb{text-align:center;}.cdn{font-family:'Cormorant Garamond',serif;font-size:2.3rem;font-weight:300;color:#fff;line-height:1;}
+.cdlbl{font-size:0.56rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.36);margin-top:3px;}
+.cdsp{font-family:'Cormorant Garamond',serif;font-size:1.85rem;color:rgba(255,255,255,0.26);padding-top:3px;}
+.hscroll{position:absolute;bottom:32px;display:flex;flex-direction:column;align-items:center;gap:8px;animation:fdown 1s 3.2s both;color:rgba(255,255,255,0.3);font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;}
+.hscroll-line{width:1px;height:36px;background:linear-gradient(to bottom,rgba(255,255,255,0.36),transparent);animation:sline 1.8s ease infinite;}
+@keyframes sline{0%,100%{transform:scaleY(1);opacity:1;}50%{transform:scaleY(0.36);opacity:0.26;}}
+@keyframes fdown{from{opacity:0;transform:translateY(-16px);}to{opacity:1;transform:none;}}
+
+/* SECTIONS */
+.sec{position:relative;z-index:1;padding:96px 24px;}
+.si{max-width:1080px;margin:0 auto;}
+.sh{text-align:center;margin-bottom:58px;}
+.stag{font-size:0.63rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--ac);margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:12px;}
+.stag::before,.stag::after{content:'';width:24px;height:1px;background:var(--c2);opacity:0.48;}
+.stitle{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,5vw,3.3rem);font-weight:600;color:var(--deep);line-height:1.15;}
+.stitle em{font-style:italic;color:var(--ac);}
+
+/* CARDS */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:18px;}
+.card{background:var(--card);backdrop-filter:blur(22px);border:1px solid rgba(180,210,255,0.3);border-radius:18px;padding:26px;transition:transform 0.35s cubic-bezier(.16,1,.3,1),box-shadow 0.35s;}
+.card:hover{transform:translateY(-6px);box-shadow:0 18px 46px rgba(120,160,240,0.16);}
+.card-e{font-size:2rem;display:block;margin-bottom:10px;animation:efloa 3s ease-in-out infinite;}
+@keyframes efloa{0%,100%{transform:translateY(0) rotate(-3deg);}50%{transform:translateY(-7px) rotate(3deg);}}
+.card-sub{font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ac);opacity:0.7;margin-bottom:4px;}
+.card-t{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:600;color:var(--deep);margin-bottom:7px;}
+.card-d{font-size:0.8rem;line-height:1.8;color:var(--mu);}
+
+/* FEELINGS */
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;}
+.feel-card{background:var(--card);backdrop-filter:blur(18px);border:1px solid rgba(180,210,255,0.26);border-radius:16px;padding:22px;display:flex;gap:13px;align-items:flex-start;}
+.feel-e{font-size:1.75rem;flex-shrink:0;margin-top:2px;}
+.feel-t{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:var(--deep);line-height:1.6;}
+
+/* PHOTOS */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;}
+.p-item{border-radius:12px;overflow:hidden;aspect-ratio:1;}
+.p-item img{width:100%;height:100%;object-fit:cover;cursor:pointer;transition:transform 0.4s cubic-bezier(.16,1,.3,1);}
+.p-item:hover img{transform:scale(1.06);}
+
+/* LIGHTBOX */
+.lb{position:fixed;inset:0;z-index:2000;background:rgba(10,20,60,0.92);backdrop-filter:blur(22px);display:none;align-items:center;justify-content:center;}
+.lb.open{display:flex;}
+.lb img{max-width:90vw;max-height:90vh;border-radius:11px;box-shadow:0 36px 90px rgba(0,0,0,0.46);}
+.lbclose{position:absolute;top:22px;right:26px;font-size:1.85rem;color:#fff;opacity:0.48;cursor:pointer;background:none;border:none;transition:opacity 0.2s;}
+.lbclose:hover{opacity:1;}
+
+/* LETTER */
+.lsec{position:relative;z-index:1;padding:0 24px 96px;}
+.lcard{max-width:650px;margin:0 auto;background:var(--card);backdrop-filter:blur(22px);border:1px solid rgba(180,210,255,0.36);border-radius:24px;padding:56px 48px;text-align:center;box-shadow:0 28px 72px rgba(120,160,240,0.08);position:relative;overflow:hidden;}
+.lcard::before{content:'💙';position:absolute;top:-14px;left:50%;transform:translateX(-50%);font-size:2rem;}
+.ldeco{position:absolute;font-size:8rem;opacity:0.028;font-family:'Cormorant Garamond',serif;top:8px;right:14px;color:var(--ac);pointer-events:none;}
+.lgreet{font-family:'Cormorant Garamond',serif;font-size:clamp(1.7rem,4vw,2.6rem);font-weight:600;color:var(--deep);margin-bottom:7px;}
+.ldate{font-size:0.63rem;letter-spacing:0.2em;color:var(--mu);margin-bottom:26px;display:block;text-transform:uppercase;}
+.lbody{font-size:0.88rem;line-height:2.05;color:var(--mu);text-align:left;white-space:pre-wrap;}
+.lsig{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.32rem;color:var(--ac);margin-top:28px;display:block;}
+
+/* HIDDEN MSG */
+${HID ? `.htrig{text-align:center;padding:0 24px 76px;position:relative;z-index:1;}
+.hbtn{background:transparent;border:1px solid rgba(120,160,255,0.22);color:var(--mu);padding:11px 26px;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:0.72rem;letter-spacing:0.14em;cursor:pointer;transition:all 0.3s;}
+.hbtn:hover{background:rgba(120,160,255,0.07);color:var(--ac);border-color:var(--ac);}
+.hmsg{display:none;position:fixed;inset:0;z-index:3000;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:40px;}
+.hmsg.open{display:flex;animation:fadein 0.7s ease;}
+.hmbg{position:absolute;inset:0;background:rgba(10,20,60,0.96);backdrop-filter:blur(28px);}
+.hmx{position:absolute;top:22px;right:26px;font-size:1.85rem;color:rgba(255,255,255,0.36);cursor:pointer;background:none;border:none;transition:color 0.2s;}
+.hmx:hover{color:#fff;}
+.hmcon{position:relative;z-index:1;}
+.hmtxt{font-family:'Cormorant Garamond',serif;font-size:clamp(1.35rem,4vw,2.5rem);font-weight:300;color:#fff;line-height:1.75;max-width:620px;}
+.hmtxt em{font-style:italic;color:${BL};}
+.hmhrt{font-size:1.85rem;margin-top:28px;letter-spacing:0.3em;animation:hbeat 1.5s infinite;}` : ''}
+
+/* FOOTER */
+footer{position:relative;z-index:1;text-align:center;padding:44px 24px 68px;border-top:1px solid rgba(180,210,255,0.2);}
+.fhrt{font-size:1.85rem;display:block;margin-bottom:13px;animation:hbeat 1.5s infinite;}
+@keyframes hbeat{0%,100%{transform:scale(1);}14%{transform:scale(1.17);}28%{transform:scale(1);}42%{transform:scale(1.09);}56%{transform:scale(1);}}
+.fquote{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:var(--mu);}
+.fname{font-size:0.65rem;color:var(--mu);opacity:0.36;margin-top:7px;letter-spacing:0.1em;}
+@keyframes fadein{from{opacity:0;}to{opacity:1;}}
+
+@media(max-width:640px){
+  body{cursor:auto;}.cur,.curg{display:none;}
+  .lcard{padding:44px 18px;}.sec{padding:68px 16px;}
+  .hname{font-size:clamp(4rem,16vw,7rem);}
+}
+</style>
+</head>
+<body>
+
+<div id="ldr">
+  <span class="lname">${N}</span>
+  <div class="lbar"></div>
+  <span class="lsub">дурсамжууд ачаалж байна</span>
+</div>
+
+${PW ? `<div id="pwg">
+  <div class="pwname">${N}</div>
+  <div class="pwsub">нууц үг оруулна уу</div>
+  <div class="pwrow">
+    <input class="pwinput" id="pwi" type="password" placeholder="••••••" maxlength="30">
+    <button class="pwbtn" onclick="chkPw()">Нэвтрэх</button>
+  </div>
+  <div class="pwerr" id="pwe"></div>
+</div>` : ''}
+
+<div class="cur" id="cur"></div>
+<div class="curg" id="curg"></div>
+<audio id="bgm" loop></audio>
+<button class="mbtn" id="mb">🎵</button>
+
+<div class="lb" id="lb">
+  <button class="lbclose" onclick="document.getElementById('lb').classList.remove('open')">✕</button>
+  <img id="lbimg" src="" alt="">
+</div>
+
+${HID ? `<div class="hmsg" id="hmsg">
+  <div class="hmbg"></div>
+  <button class="hmx" onclick="document.getElementById('hmsg').classList.remove('open')">✕</button>
+  <div class="hmcon">
+    <div class="hmtxt">${HID.replace(/\n/g, '<br>')}</div>
+    <div class="hmhrt">💙 💫 💙</div>
+  </div>
+</div>` : ''}
+
+<div class="bgl"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+
+<section class="hero">
+  <div class="hbg"></div>
+  <div class="stars"></div>
+  <div class="hcon">
+    <p class="hey">✦ Манай хамтын дурсамжууд ✦</p>
+    <h1 class="hname">${N}</h1>
+    <p class="hsub">${SUB}</p>
+    <p class="hint">${INT}</p>
+    ${c.date ? `<div class="cdw">
+      <div class="cdb"><div class="cdn" id="cdD">0</div><div class="cdlbl">өдөр</div></div>
+      <div class="cdsp">·</div>
+      <div class="cdb"><div class="cdn" id="cdH">0</div><div class="cdlbl">цаг</div></div>
+      <div class="cdsp">·</div>
+      <div class="cdb"><div class="cdn" id="cdM">0</div><div class="cdlbl">минут</div></div>
+    </div>` : ''}
+  </div>
+  <div class="hscroll"><div class="hscroll-line"></div>доош гүйлгэ</div>
+</section>
+
+${acts.length ? `<section class="sec">
+<div class="si">
+  <div class="sh rv"><p class="stag">Бидний хамт</p><h2 class="stitle">Хамтдаа <em>хийсэн зүйлс</em></h2></div>
+  <div class="grid">${actsHTML}</div>
+</div></section>` : ''}
+
+${feelings.length ? `<section class="sec" style="padding-top:0">
+<div class="si">
+  <div class="sh rv"><p class="stag">Мэдрэмж</p><h2 class="stitle"><em>Санасан</em> зүйлс</h2></div>
+  <div class="fgrid">${feelHTML}</div>
+</div></section>` : ''}
+
+${photos.length ? `<section class="sec" style="padding-top:0">
+<div class="si">
+  <div class="sh rv"><p class="stag">Дурсамж зурагнууд</p><h2 class="stitle">Бидний <em>фото</em></h2></div>
+  <div class="pgrid">${photoHTML}</div>
+</div></section>` : ''}
+
+<section class="lsec">
+  <div class="sh rv" style="text-align:center;margin-bottom:44px;">
+    <p class="stag">Зүрхний үгнүүд</p>
+    <h2 class="stitle"><em>Чамд</em> бичсэн захидал</h2>
+  </div>
+  <div class="lcard rv">
+    <div class="ldeco">💙</div>
+    <h3 class="lgreet">${LTO}</h3>
+    <span class="ldate" id="ldt"></span>
+    <p class="lbody">${LET}</p>
+    <span class="lsig">${SIG}</span>
+  </div>
+</section>
+
+${HID ? `<div class="htrig"><button class="hbtn" onclick="document.getElementById('hmsg').classList.add('open')">💙 &nbsp; Нууц захиа</button></div>` : ''}
+
+<footer>
+  <span class="fhrt">💙</span>
+  <p class="fquote">"${QUO}"</p>
+  <p class="fname">${N}д зориулав • 2025</p>
+</footer>
+
+<script>
+const PHOTOS = [${photosJS}];
+function openLb(i){ document.getElementById('lbimg').src=PHOTOS[i]; document.getElementById('lb').classList.add('open'); }
+document.getElementById('lb').addEventListener('click', function(e){ if(e.target===this) this.classList.remove('open'); });
+
+${PW ? `function chkPw(){
+  if(document.getElementById('pwi').value === ${JSON.stringify(PW)}){
+    document.getElementById('pwg').style.display='none'; startSite();
+  } else {
+    document.getElementById('pwe').textContent='Буруу нууц үг. Дахин оролдоно уу.';
+    document.getElementById('pwi').value='';
+  }
+}
+document.getElementById('pwi').addEventListener('keydown', e=>{ if(e.key==='Enter') chkPw(); });
+document.getElementById('pwg').classList.add('show');` : ''}
+
+function startSite(){
+  document.getElementById('ldr').classList.add('gone');
+  setTimeout(()=>{ document.getElementById('ldr').style.display='none'; initReveal(); fireConfetti(); }, 1200);
+}
+
+window.addEventListener('load', ()=>{
+  const now = new Date();
+  document.getElementById('ldt').textContent =
+    now.getFullYear()+'.'+(now.getMonth()+1).toString().padStart(2,'0')+'.'+now.getDate().toString().padStart(2,'0');
+  ${c.date ? `(function tick(){
+    const d = Date.now() - new Date('${c.date}').getTime();
+    if(d > 0){
+      document.getElementById('cdD').textContent = Math.floor(d/86400000);
+      document.getElementById('cdH').textContent = Math.floor((d%86400000)/3600000);
+      document.getElementById('cdM').textContent = Math.floor((d%3600000)/60000);
+    }
+    setTimeout(tick, 60000);
+  })();` : ''}
+  ${PW ? '' : 'setTimeout(startSite, 2100);'}
+  initCursor(); startHearts();
+});
+
+function initReveal(){
+  const obs = new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('show'); }), {threshold:0.08});
+  document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+}
+function initCursor(){
+  const d=document.getElementById('cur'), g=document.getElementById('curg');
+  let gx=0,gy=0,mx=0,my=0;
+  document.addEventListener('mousemove',e=>{ mx=e.clientX;my=e.clientY;d.style.left=mx+'px';d.style.top=my+'px'; });
+  (function a(){ gx+=(mx-gx)*0.1;gy+=(my-gy)*0.1;g.style.left=gx+'px';g.style.top=gy+'px';requestAnimationFrame(a); })();
+}
+function startHearts(){
+  setInterval(()=>{
+    const h=document.createElement('div'); h.className='hrt'; h.textContent='💙';
+    h.style.left=Math.random()*100+'vw';
+    h.style.fontSize=(13+Math.random()*11)+'px';
+    h.style.animationDuration=(7+Math.random()*5)+'s';
+    document.body.appendChild(h); setTimeout(()=>h.remove(),13000);
+  }, 2600);
+}
+function fireConfetti(){
+  const cols=['${BL}','${C3}','${AC}','#ffffff'];
+  for(let i=0;i<65;i++) setTimeout(()=>{
+    const el=document.createElement('div'); el.className='cof';
+    el.style.cssText='left:'+Math.random()*100+'vw;width:'+(5+Math.random()*6)+'px;height:'+(5+Math.random()*6)+'px;background:'+cols[Math.floor(Math.random()*cols.length)]+';animation-duration:'+(1.8+Math.random()*2)+'s;';
+    document.body.appendChild(el); setTimeout(()=>el.remove(),4000);
+  }, i*32);
+}
+window.addEventListener('scroll',()=>{
+  const s=window.scrollY, bg=document.querySelector('.hbg');
+  if(bg) bg.style.transform='scale(1.12) translateY('+s*0.27+'px)';
+});
+const mb=document.getElementById('mb');
+mb.addEventListener('click',()=>{
+  const a=document.getElementById('bgm');
+  if(!a.src || a.src===location.href) return;
+  a.paused ? (a.play().catch(()=>{}),mb.textContent='🔊',mb.classList.add('play'))
+           : (a.pause(),mb.textContent='🎵',mb.classList.remove('play'));
+});
+<\/script>
+</body>
+</html>`;
+    }
+  </script>
+</body>
+
+</html>
