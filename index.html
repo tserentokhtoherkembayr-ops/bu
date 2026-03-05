@@ -10,9 +10,6 @@
     rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
-    /* ────────────────────────────────────────
-   ROOT & RESET
-──────────────────────────────────────── */
     *,
     *::before,
     *::after {
@@ -42,7 +39,6 @@
       font-family: 'DM Sans', sans-serif;
       background: var(--bg);
       color: var(--ink);
-      overflow: hidden;
     }
 
     button,
@@ -57,18 +53,15 @@
       cursor: pointer;
     }
 
-    /* ────────────────────────────────────────
-   LAYOUT — 3 columns
-──────────────────────────────────────── */
+    /* ── LAYOUT ── */
     .shell {
       display: grid;
       grid-template-columns: 260px 1fr 340px;
       height: 100vh;
+      overflow: hidden;
     }
 
-    /* ────────────────────────────────────────
-   LEFT NAV
-──────────────────────────────────────── */
+    /* ── LEFT NAV ── */
     .nav {
       background: var(--white);
       border-right: 1px solid var(--line);
@@ -183,9 +176,103 @@
       opacity: 0.92;
     }
 
-    /* ────────────────────────────────────────
-   CENTER — PANELS
-──────────────────────────────────────── */
+    /* ── MOBILE NAV BAR ── */
+    .mobile-bar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--white);
+      border-top: 1px solid var(--line);
+      z-index: 1000;
+      padding: 6px 0 env(safe-area-inset-bottom, 8px);
+    }
+
+    .mobile-bar-inner {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .mb-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      padding: 6px 10px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--muted);
+      transition: color 0.2s;
+      position: relative;
+    }
+
+    .mb-item.on {
+      color: var(--accent);
+    }
+
+    .mb-item .mb-ico {
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+
+    .mb-item .mb-lbl {
+      font-size: 0.52rem;
+      letter-spacing: 0.04em;
+      font-weight: 500;
+    }
+
+    .mb-badge {
+      position: absolute;
+      top: 2px;
+      right: 6px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.48rem;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 100px;
+      min-width: 14px;
+      text-align: center;
+    }
+
+    .mobile-top-bar {
+      display: none;
+      background: var(--white);
+      border-bottom: 1px solid var(--line);
+      padding: 12px 16px 10px;
+      padding-top: max(12px, env(safe-area-inset-top));
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .mobile-top-bar .nav-logo {
+      font-size: 1.25rem;
+    }
+
+    .mobile-top-bar .nav-sub {
+      font-size: 0.6rem;
+    }
+
+    .mobile-export-btn {
+      margin-left: auto;
+      padding: 8px 14px;
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.72rem;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    /* ── CENTER ── */
     .center {
       background: var(--bg);
       overflow-y: auto;
@@ -221,7 +308,7 @@
       line-height: 1.6;
     }
 
-    /* form elements */
+    /* form */
     .fg {
       margin-bottom: 18px;
     }
@@ -283,10 +370,11 @@
       margin-bottom: 14px;
     }
 
-    /* color swatches */
+    /* swatches */
     .sw-row {
       display: flex;
       gap: 10px;
+      flex-wrap: wrap;
     }
 
     .sw {
@@ -306,7 +394,7 @@
       border-color: var(--ink);
     }
 
-    /* ── ACTIVITIES ── */
+    /* activities */
     .act-list {
       display: flex;
       flex-direction: column;
@@ -434,7 +522,7 @@
       color: var(--accent);
     }
 
-    /* ── PHOTOS ── */
+    /* photos */
     .dropzone {
       border: 2px dashed rgba(64, 96, 208, 0.2);
       border-radius: 12px;
@@ -507,7 +595,14 @@
       opacity: 1;
     }
 
-    /* ── PUBLISH PANEL ── */
+    /* always show delete on touch devices */
+    @media (hover: none) {
+      .photo-del {
+        opacity: 1;
+      }
+    }
+
+    /* publish */
     .pub-steps {
       display: flex;
       flex-direction: column;
@@ -622,7 +717,7 @@
       color: var(--accent);
     }
 
-    /* QR section */
+    /* QR */
     .qr-divider {
       display: flex;
       align-items: center;
@@ -751,9 +846,7 @@
       opacity: 0.82;
     }
 
-    /* ────────────────────────────────────────
-   RIGHT — LIVE PREVIEW
-──────────────────────────────────────── */
+    /* ── RIGHT PREVIEW ── */
     .preview-col {
       background: #e8ecf4;
       border-left: 1px solid var(--line);
@@ -834,7 +927,7 @@
       background: var(--white);
     }
 
-    /* ── HERO STRIP (mini preview in nav) ── */
+    /* hero strip */
     .hero-strip {
       height: 52px;
       margin: 0 20px 14px;
@@ -856,11 +949,11 @@
       text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
     }
 
-    /* ── TOAST ── */
+    /* toast */
     .toast {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
+      bottom: 80px;
+      right: 16px;
       background: var(--ink);
       color: #fff;
       padding: 10px 18px;
@@ -884,10 +977,14 @@
       }
     }
 
-    /* ── RESPONSIVE ── */
-    @media(max-width:1100px) {
+    /* ══════════════════════════════
+       RESPONSIVE — TABLET
+    ══════════════════════════════ */
+    @media (max-width: 1100px) {
       .shell {
         grid-template-columns: 220px 1fr;
+        overflow: auto;
+        height: 100vh;
       }
 
       .preview-col {
@@ -895,13 +992,175 @@
       }
     }
 
-    @media(max-width:700px) {
-      .shell {
-        grid-template-columns: 1fr;
+    /* ══════════════════════════════
+       RESPONSIVE — MOBILE (≤ 768px)
+    ══════════════════════════════ */
+    @media (max-width: 768px) {
+      body {
+        overflow-y: auto;
       }
 
+      .shell {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+        height: auto;
+        min-height: 100vh;
+        overflow: visible;
+      }
+
+      /* hide desktop nav, show mobile */
       .nav {
         display: none;
+      }
+
+      .mobile-top-bar {
+        display: flex;
+      }
+
+      .mobile-bar {
+        display: block;
+      }
+
+      .preview-col {
+        display: none;
+      }
+
+      .center {
+        overflow-y: visible;
+        min-height: calc(100vh - 110px);
+      }
+
+      .panel {
+        padding: 20px 16px;
+        padding-bottom: 90px;
+        /* space for bottom bar */
+        max-width: 100%;
+        margin: 0;
+      }
+
+      .panel-title {
+        font-size: 1.5rem;
+      }
+
+      .panel-sub {
+        font-size: 0.75rem;
+        margin-bottom: 20px;
+      }
+
+      /* stack 2-col grids on mobile */
+      .fi-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      /* bigger tap targets */
+      .fi {
+        padding: 12px 14px;
+        font-size: 0.9rem;
+      }
+
+      textarea.fi {
+        min-height: 80px;
+      }
+
+      .ep {
+        font-size: 1.3rem;
+        padding: 7px 8px;
+      }
+
+      .act-row {
+        padding: 12px 14px;
+      }
+
+      .act-t {
+        font-size: 0.9rem;
+      }
+
+      .act-del {
+        opacity: 0.6;
+        padding: 6px 10px;
+        font-size: 1rem;
+      }
+
+      .photo-grid {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        gap: 6px;
+      }
+
+      .photo-del {
+        opacity: 1;
+        width: 22px;
+        height: 22px;
+        font-size: 0.65rem;
+      }
+
+      .add-card {
+        padding: 14px;
+      }
+
+      .mini-btn {
+        padding: 11px 20px;
+        font-size: 0.85rem;
+        width: 100%;
+        text-align: center;
+      }
+
+      .sw {
+        width: 36px;
+        height: 36px;
+      }
+
+      .pub-step {
+        padding: 14px;
+      }
+
+      .ps-title {
+        font-size: 0.88rem;
+      }
+
+      .pub-btn {
+        padding: 14px;
+        font-size: 0.88rem;
+      }
+
+      .qr-input-row {
+        flex-direction: column;
+      }
+
+      .qr-go {
+        width: 100%;
+        padding: 12px;
+      }
+
+      .toast {
+        bottom: 90px;
+        left: 16px;
+        right: 16px;
+        text-align: center;
+        border-radius: 12px;
+      }
+
+      /* dropzone touch friendly */
+      .dropzone {
+        padding: 30px 16px;
+      }
+
+      .dz-icon {
+        font-size: 2.5rem;
+      }
+
+      .dz-txt {
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .panel {
+        padding: 16px 12px 90px;
+      }
+
+      .fi-row {
+        gap: 0;
       }
     }
   </style>
@@ -910,46 +1169,46 @@
 <body>
   <div class="shell">
 
-    <!-- ════ LEFT NAV ════ -->
+    <!-- ════ MOBILE TOP BAR ════ -->
+    <div class="mobile-top-bar" id="mobileTopBar">
+      <div>
+        <div class="nav-logo">💙 Builder</div>
+        <div class="nav-sub">Дурсамжийн сайт үүсгэгч</div>
+      </div>
+      <button class="mobile-export-btn" onclick="exportSite()">💾 Татах</button>
+    </div>
+
+    <!-- ════ LEFT NAV (desktop) ════ -->
     <div class="nav">
       <div class="nav-brand">
         <div class="nav-logo">💙 Builder</div>
         <div class="nav-sub">Дурсамжийн сайт үүсгэгч</div>
       </div>
-
-      <!-- mini hero strip -->
       <div style="padding:14px 0 0;">
         <div class="hero-strip" id="heroStrip" style="background:linear-gradient(135deg,#1a2a6c,#5b8fe8)">
           <span class="hero-strip-name" id="heroStripName">Нэр</span>
         </div>
       </div>
-
       <div class="nav-items">
         <button class="nav-item on" onclick="goPanel('info')">
-          <div class="nav-ico">✏️</div>
-          <span class="nav-txt">Үндсэн мэдээлэл</span>
+          <div class="nav-ico">✏️</div><span class="nav-txt">Үндсэн мэдээлэл</span>
         </button>
         <button class="nav-item" onclick="goPanel('acts')">
-          <div class="nav-ico">🎯</div>
-          <span class="nav-txt">Хамтдаа хийсэн зүйл</span>
+          <div class="nav-ico">🎯</div><span class="nav-txt">Хамтдаа хийсэн зүйл</span>
           <span class="nav-badge" id="actBadge">3</span>
         </button>
         <button class="nav-item" onclick="goPanel('photo')">
-          <div class="nav-ico">📷</div>
-          <span class="nav-txt">Зургууд</span>
+          <div class="nav-ico">📷</div><span class="nav-txt">Зургууд</span>
           <span class="nav-badge" id="photoBadge">0</span>
         </button>
         <button class="nav-item" onclick="goPanel('feel')">
-          <div class="nav-ico">💙</div>
-          <span class="nav-txt">Мэдрэмжүүд</span>
+          <div class="nav-ico">💙</div><span class="nav-txt">Мэдрэмжүүд</span>
           <span class="nav-badge" id="feelBadge">0</span>
         </button>
         <button class="nav-item" onclick="goPanel('pub')">
-          <div class="nav-ico">🚀</div>
-          <span class="nav-txt">Нийтлэх + QR</span>
+          <div class="nav-ico">🚀</div><span class="nav-txt">Нийтлэх + QR</span>
         </button>
       </div>
-
       <div class="nav-footer">
         <button class="nav-publish" onclick="exportSite()">💾 &nbsp; site.html татах</button>
       </div>
@@ -961,11 +1220,11 @@
       <!-- INFO -->
       <div class="panel on" id="panel-info">
         <div class="panel-title">Үндсэн мэдээлэл</div>
-        <div class="panel-sub">Сайтын нэр, текстүүдийг бөглөнө үү. Preview баруун талд шууд харагдана.</div>
+        <div class="panel-sub">Сайтын нэр, текстүүдийг бөглөнө үү.</div>
 
         <div class="fi-row">
-          <div class="fg"><label class="fl">Охины нэр</label>
-            <input class="fi" id="f_name" placeholder="Энэрэл" maxlength="30">
+          <div class="fg"><label class="fl">нэр</label>
+            <input class="fi" id="f_name" placeholder="" maxlength="30">
           </div>
           <div class="fg"><label class="fl">Гарын үсэг</label>
             <input class="fi" id="f_sig" placeholder="— чиний найзаас 💙" maxlength="60">
@@ -986,7 +1245,7 @@
         <div class="sec-label">Захидал</div>
         <div class="fi-row">
           <div class="fg"><label class="fl">Мэндчилгээ</label>
-            <input class="fi" id="f_lto" placeholder="Энэрэл," maxlength="40">
+            <input class="fi" id="f_lto" placeholder="" maxlength="40">
           </div>
           <div class="fg"><label class="fl">Нууц үг (заавал биш)</label>
             <input class="fi" type="password" id="f_pw" placeholder="Хоосон = нээлттэй">
@@ -1028,10 +1287,8 @@
       <!-- ACTIVITIES -->
       <div class="panel" id="panel-acts">
         <div class="panel-title">Хамтдаа хийсэн зүйлс</div>
-        <div class="panel-sub">Хамтдаа хийж байсан зүйлсийг нэм. Картын хэлбэрээр сайт дотор харагдана.</div>
-
+        <div class="panel-sub">Хамтдаа хийж байсан зүйлсийг нэм.</div>
         <div class="act-list" id="actList"></div>
-
         <div class="add-card">
           <div class="add-card-title">+ Шинэ зүйл нэм</div>
           <div class="emoji-row" id="actErow">
@@ -1056,11 +1313,10 @@
       <!-- PHOTOS -->
       <div class="panel" id="panel-photo">
         <div class="panel-title">Зургууд</div>
-        <div class="panel-sub">Дурсамжийн зургуудаа нэм. Автоматаар жижигрүүлж хадгална — refresh хийсэн ч үлдэнэ.</div>
-
+        <div class="panel-sub">Дурсамжийн зургуудаа нэм. Автоматаар жижигрүүлж хадгална.</div>
         <div class="dropzone" id="dropzone" onclick="document.getElementById('pInput').click()">
           <span class="dz-icon">📷</span>
-          <div class="dz-txt">Зургуудаа энд дар эсвэл чирж тавь<br>
+          <div class="dz-txt">Зургуудаа дар эсвэл чирж тавь<br>
             <span style="font-size:0.65rem;opacity:0.5;">JPG, PNG — автоматаар 1200px болгон жижигрүүлнэ</span>
           </div>
         </div>
@@ -1071,10 +1327,8 @@
       <!-- FEELINGS -->
       <div class="panel" id="panel-feel">
         <div class="panel-title">Мэдрэмжүүд</div>
-        <div class="panel-sub">Дурсамж, мэдрэмж, санасан зүйлсийг нэм. Сайт дотор тусгай хэсэг болж харагдана.</div>
-
+        <div class="panel-sub">Дурсамж, мэдрэмж, санасан зүйлсийг нэм.</div>
         <div class="act-list" id="feelList"></div>
-
         <div class="add-card">
           <div class="add-card-title">+ Мэдрэмж нэм</div>
           <div class="emoji-row" id="feelErow">
@@ -1094,8 +1348,7 @@
       <!-- PUBLISH -->
       <div class="panel" id="panel-pub">
         <div class="panel-title">Нийтлэх + QR код</div>
-        <div class="panel-sub">Сайтаа интернет дээр тавиад QR кодыг бэлдэж Мартын 8-ны бэлэгтэй хамт өг 🎁</div>
-
+        <div class="panel-sub">Сайтаа интернет дээр тавиад QR кодыг бэлдэж өг 🎁</div>
         <div class="pub-steps">
           <div class="pub-step">
             <div class="ps-num">1</div>
@@ -1111,8 +1364,8 @@
             <div class="ps-body">
               <div class="ps-title">Netlify Drop-д тавих</div>
               <div class="ps-desc">
-                <a href="https://app.netlify.com/drop" target="_blank">app.netlify.com/drop</a> → нээгдэхэд site.html-г
-                тэр хуудас руу чирж тавь → хэдхэн секундэд URL гарна.<br>
+                <a href="https://app.netlify.com/drop" target="_blank">app.netlify.com/drop</a> → site.html-г чирж тавь
+                → хэдхэн секундэд URL гарна.<br>
                 <strong style="color:var(--green);">Бүртгэл шаардлагагүй. Үнэгүй. 30 секунд.</strong>
               </div>
             </div>
@@ -1127,19 +1380,16 @@
             <div class="ps-icon">📱</div>
           </div>
         </div>
-
         <div class="pub-actions">
           <button class="pub-btn green" onclick="exportSite()">💾 &nbsp; site.html татах</button>
           <button class="pub-btn blue-o" onclick="window.open('https://app.netlify.com/drop','_blank')">🌐 &nbsp;
             Netlify Drop нээх</button>
         </div>
-
         <div class="qr-divider"><span>URL → QR код</span></div>
         <div class="qr-input-row">
           <input class="fi" id="urlInput" type="url" placeholder="https://amazing-name-123.netlify.app">
           <button class="qr-go" onclick="makeQR()">QR үүсгэх</button>
         </div>
-
         <div class="qr-result" id="qrResult">
           <div id="qrOut"></div>
           <div class="qr-url-txt" id="qrUrlTxt"></div>
@@ -1170,18 +1420,38 @@
 
   </div><!-- /shell -->
 
+  <!-- ════ MOBILE BOTTOM NAV ════ -->
+  <div class="mobile-bar">
+    <div class="mobile-bar-inner">
+      <button class="mb-item on" id="mb-info" onclick="goPanel('info')">
+        <span class="mb-ico">✏️</span><span class="mb-lbl">Мэдээлэл</span>
+      </button>
+      <button class="mb-item" id="mb-acts" onclick="goPanel('acts')">
+        <span class="mb-ico">🎯</span><span class="mb-lbl">Зүйлс</span>
+        <span class="mb-badge" id="mActBadge">3</span>
+      </button>
+      <button class="mb-item" id="mb-photo" onclick="goPanel('photo')">
+        <span class="mb-ico">📷</span><span class="mb-lbl">Зураг</span>
+        <span class="mb-badge" id="mPhotoBadge" style="display:none">0</span>
+      </button>
+      <button class="mb-item" id="mb-feel" onclick="goPanel('feel')">
+        <span class="mb-ico">💙</span><span class="mb-lbl">Мэдрэмж</span>
+        <span class="mb-badge" id="mFeelBadge" style="display:none">0</span>
+      </button>
+      <button class="mb-item" id="mb-pub" onclick="goPanel('pub')">
+        <span class="mb-ico">🚀</span><span class="mb-lbl">Нийтлэх</span>
+      </button>
+    </div>
+  </div>
+
   <script>
-    /* ════════════════════════════════════════
-       STORAGE
-    ════════════════════════════════════════ */
+    /* ══ STORAGE ══ */
     const S = {
       g(k) { try { return JSON.parse(localStorage.getItem('bld_' + k)); } catch { return null; } },
       s(k, v) { try { localStorage.setItem('bld_' + k, JSON.stringify(v)); } catch { } }
     };
 
-    /* ════════════════════════════════════════
-       STATE
-    ════════════════════════════════════════ */
+    /* ══ STATE ══ */
     let acts = S.g('acts') || [
       { id: 1, emoji: '🎾', title: 'Агаарын Теннис', sub: '2 жилийн өмнө', desc: 'Хамтдаа теннис тоглодог байсан. Хэн илүү муу байсан бол мэдэхгүй ч хамтдаа ирдэг байсан нь хөгжилтэй байсан.' },
       { id: 2, emoji: '🎨', title: 'Зургийн Клуб', sub: 'Хамтын бүтээл', desc: 'Зургийн клубт хамтдаа явдаг байсан. Ямар зүйл зурдаг байсан бол — чи санаж байна уу? 😄' },
@@ -1195,11 +1465,8 @@
     let sAE = '🎾', sFE = '💙';
     let lastQRUrl = '';
 
-    /* ════════════════════════════════════════
-       INIT
-    ════════════════════════════════════════ */
+    /* ══ INIT ══ */
     window.addEventListener('load', () => {
-      // restore form values
       const f = id => document.getElementById(id);
       f('f_name').value = cfg.name || '';
       f('f_sig').value = cfg.sig || '';
@@ -1212,32 +1479,23 @@
       f('f_hidden').value = cfg.hidden || '';
       f('f_quote').value = cfg.quote || '';
 
-      // restore color
       if (cfg.ac) {
-        document.querySelectorAll('.sw').forEach(s => {
-          s.classList.toggle('on', s.dataset.ac === cfg.ac);
-        });
+        document.querySelectorAll('.sw').forEach(s => s.classList.toggle('on', s.dataset.ac === cfg.ac));
       }
 
-      // emoji pickers
       initErow('#actErow', e => sAE = e);
       initErow('#feelErow', e => sFE = e);
 
-      // color swatch clicks
       document.querySelectorAll('.sw').forEach(s => s.addEventListener('click', () => {
         document.querySelectorAll('.sw').forEach(x => x.classList.remove('on'));
         s.classList.add('on');
         saveCfg(); updateStrip(); refresh();
       }));
 
-      // auto-save on any input change
       ['f_name', 'f_sig', 'f_sub', 'f_intro', 'f_date', 'f_lto', 'f_pw', 'f_letter', 'f_hidden', 'f_quote'].forEach(id => {
-        document.getElementById(id).addEventListener('input', () => {
-          saveCfg(); updateStrip();
-        });
+        document.getElementById(id).addEventListener('input', () => { saveCfg(); updateStrip(); });
       });
 
-      // photo upload
       document.getElementById('pInput').addEventListener('change', e => {
         handlePhotos(Array.from(e.target.files));
         e.target.value = '';
@@ -1254,19 +1512,23 @@
       updateStrip(); refresh();
     });
 
-    /* ════════════════════════════════════════
-       NAVIGATION
-    ════════════════════════════════════════ */
+    /* ══ NAV ══ */
     const PANELS = ['info', 'acts', 'photo', 'feel', 'pub'];
     function goPanel(key) {
+      // desktop nav
       document.querySelectorAll('.nav-item').forEach((el, i) => el.classList.toggle('on', PANELS[i] === key));
+      // mobile bottom nav
+      document.querySelectorAll('.mb-item').forEach(el => el.classList.remove('on'));
+      const mbEl = document.getElementById('mb-' + key);
+      if (mbEl) mbEl.classList.add('on');
+      // panels
       document.querySelectorAll('.panel').forEach(el => el.classList.remove('on'));
       document.getElementById('panel-' + key).classList.add('on');
+      // scroll to top on mobile
+      if (window.innerWidth <= 768) window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    /* ════════════════════════════════════════
-       CONFIG SAVE
-    ════════════════════════════════════════ */
+    /* ══ CONFIG ══ */
     function saveCfg() {
       const sw = document.querySelector('.sw.on') || document.querySelector('.sw');
       cfg = {
@@ -1285,7 +1547,6 @@
       };
       S.s('cfg', cfg);
     }
-
     function updateStrip() {
       const n = document.getElementById('f_name').value || 'Нэр';
       document.getElementById('heroStripName').textContent = n;
@@ -1294,20 +1555,19 @@
         `linear-gradient(135deg,${sw.dataset.c1},${sw.dataset.c3})`;
     }
 
-    /* ════════════════════════════════════════
-       ACTIVITIES
-    ════════════════════════════════════════ */
+    /* ══ ACTIVITIES ══ */
     function renderActs() {
       document.getElementById('actList').innerHTML = acts.map(a => `
-    <div class="act-row">
-      <div class="act-e">${a.emoji}</div>
-      <div class="act-info">
-        <div class="act-t">${esc(a.title)}${a.sub ? ` <span style="font-size:0.7rem;color:var(--muted);font-weight:400;">· ${esc(a.sub)}</span>` : ''}</div>
-        <div class="act-d">${esc(a.desc)}</div>
-      </div>
-      <button class="act-del" onclick="delAct(${a.id})">✕</button>
-    </div>`).join('');
+      <div class="act-row">
+        <div class="act-e">${a.emoji}</div>
+        <div class="act-info">
+          <div class="act-t">${esc(a.title)}${a.sub ? ` <span style="font-size:0.7rem;color:var(--muted);font-weight:400;">· ${esc(a.sub)}</span>` : ''}</div>
+          <div class="act-d">${esc(a.desc)}</div>
+        </div>
+        <button class="act-del" onclick="delAct(${a.id})">✕</button>
+      </div>`).join('');
       document.getElementById('actBadge').textContent = acts.length;
+      document.getElementById('mActBadge').textContent = acts.length;
     }
     function delAct(id) {
       if (!confirm('Устгах уу?')) return;
@@ -1317,11 +1577,7 @@
     function addAct() {
       const t = document.getElementById('act_t').value.trim();
       if (!t) { document.getElementById('act_t').focus(); return; }
-      acts.push({
-        id: nA++, emoji: sAE, title: t,
-        sub: document.getElementById('act_sub').value.trim(),
-        desc: document.getElementById('act_d').value.trim() || '...'
-      });
+      acts.push({ id: nA++, emoji: sAE, title: t, sub: document.getElementById('act_sub').value.trim(), desc: document.getElementById('act_d').value.trim() || '...' });
       S.s('acts', acts);
       document.getElementById('act_t').value = '';
       document.getElementById('act_sub').value = '';
@@ -1329,9 +1585,7 @@
       renderActs(); toast('✅ Нэмэгдлээ');
     }
 
-    /* ════════════════════════════════════════
-       PHOTOS
-    ════════════════════════════════════════ */
+    /* ══ PHOTOS ══ */
     function resizeImg(file, cb) {
       const r = new FileReader();
       r.onload = ev => {
@@ -1358,28 +1612,32 @@
     }
     function renderPhotos() {
       document.getElementById('photoGrid').innerHTML = photos.map((src, i) => `
-    <div class="photo-cell">
-      <img src="${src}" alt="">
-      <button class="photo-del" onclick="delPhoto(${i})">✕</button>
-    </div>`).join('');
-      document.getElementById('photoBadge').textContent = photos.length;
+      <div class="photo-cell">
+        <img src="${src}" alt="">
+        <button class="photo-del" onclick="delPhoto(${i})">✕</button>
+      </div>`).join('');
+      const n = photos.length;
+      document.getElementById('photoBadge').textContent = n;
+      const mb = document.getElementById('mPhotoBadge');
+      mb.textContent = n; mb.style.display = n > 0 ? '' : 'none';
     }
     function delPhoto(i) {
       if (!confirm('Зургийг устгах уу?')) return;
       photos.splice(i, 1); S.s('photos', photos); renderPhotos();
     }
 
-    /* ════════════════════════════════════════
-       FEELINGS
-    ════════════════════════════════════════ */
+    /* ══ FEELINGS ══ */
     function renderFeelings() {
       document.getElementById('feelList').innerHTML = feelings.map(f => `
-    <div class="act-row">
-      <div class="act-e">${f.emoji}</div>
-      <div class="act-info"><div class="act-t" style="font-weight:400;font-size:0.82rem;">${esc(f.text)}</div></div>
-      <button class="act-del" onclick="delFeel(${f.id})">✕</button>
-    </div>`).join('');
-      document.getElementById('feelBadge').textContent = feelings.length;
+      <div class="act-row">
+        <div class="act-e">${f.emoji}</div>
+        <div class="act-info"><div class="act-t" style="font-weight:400;font-size:0.82rem;">${esc(f.text)}</div></div>
+        <button class="act-del" onclick="delFeel(${f.id})">✕</button>
+      </div>`).join('');
+      const n = feelings.length;
+      document.getElementById('feelBadge').textContent = n;
+      const mb = document.getElementById('mFeelBadge');
+      mb.textContent = n; mb.style.display = n > 0 ? '' : 'none';
     }
     function delFeel(id) {
       feelings = feelings.filter(f => f.id !== id);
@@ -1394,9 +1652,7 @@
       renderFeelings(); toast('💙 Нэмэгдлээ');
     }
 
-    /* ════════════════════════════════════════
-       EMOJI PICKER HELPER
-    ════════════════════════════════════════ */
+    /* ══ EMOJI PICKER ══ */
     function initErow(sel, cb) {
       document.querySelectorAll(sel + ' .ep').forEach(e => e.addEventListener('click', () => {
         document.querySelectorAll(sel + ' .ep').forEach(x => x.classList.remove('on'));
@@ -1404,17 +1660,14 @@
       }));
     }
 
-    /* ════════════════════════════════════════
-       PREVIEW REFRESH
-    ════════════════════════════════════════ */
+    /* ══ PREVIEW ══ */
     function refresh() {
       saveCfg();
-      document.getElementById('previewFrame').srcdoc = buildSiteHTML();
+      const frame = document.getElementById('previewFrame');
+      if (frame) frame.srcdoc = buildSiteHTML();
     }
 
-    /* ════════════════════════════════════════
-       EXPORT
-    ════════════════════════════════════════ */
+    /* ══ EXPORT ══ */
     function exportSite() {
       saveCfg();
       const html = buildSiteHTML();
@@ -1427,20 +1680,14 @@
       setTimeout(() => goPanel('pub'), 900);
     }
 
-    /* ════════════════════════════════════════
-       QR
-    ════════════════════════════════════════ */
+    /* ══ QR ══ */
     function makeQR() {
       const url = document.getElementById('urlInput').value.trim();
       if (!url) { document.getElementById('urlInput').focus(); return; }
       lastQRUrl = url;
       const out = document.getElementById('qrOut');
       out.innerHTML = '';
-      new QRCode(out, {
-        text: url, width: 200, height: 200,
-        colorDark: '#1a2040', colorLight: '#ffffff',
-        correctLevel: QRCode.CorrectLevel.M
-      });
+      new QRCode(out, { text: url, width: 200, height: 200, colorDark: '#1a2040', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
       document.getElementById('qrUrlTxt').textContent = url;
       document.getElementById('qrResult').classList.add('show');
       setTimeout(() => document.getElementById('qrResult').scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
@@ -1458,9 +1705,7 @@
       navigator.clipboard && navigator.clipboard.writeText(lastQRUrl).then(() => toast('🔗 URL хуулагдлаа'));
     }
 
-    /* ════════════════════════════════════════
-       TOAST
-    ════════════════════════════════════════ */
+    /* ══ TOAST ══ */
     function toast(msg) {
       const t = document.createElement('div');
       t.className = 'toast'; t.textContent = msg;
@@ -1468,16 +1713,12 @@
       setTimeout(() => t.remove(), 2400);
     }
 
-    /* ════════════════════════════════════════
-       ESCAPE HELPER
-    ════════════════════════════════════════ */
+    /* ══ ESCAPE ══ */
     function esc(s) {
       return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
-    /* ════════════════════════════════════════
-       BUILD SITE HTML
-    ════════════════════════════════════════ */
+    /* ══ BUILD SITE HTML ══ */
     function buildSiteHTML() {
       const c = cfg;
       const N = esc(c.name || 'Дурсамж');
@@ -1529,8 +1770,6 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
 body{background:var(--bg);color:var(--deep);font-family:'DM Sans',sans-serif;overflow-x:hidden;cursor:none;}
-
-/* LOADER */
 #ldr{position:fixed;inset:0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:18px;transition:opacity 1.2s cubic-bezier(.16,1,.3,1),transform 1.2s;}
 #ldr.gone{opacity:0;pointer-events:none;transform:scale(1.04);}
 .lname{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,10vw,5.5rem);font-weight:300;color:var(--deep);letter-spacing:0.12em;animation:lpulse 1.5s ease infinite;}
@@ -1538,120 +1777,89 @@ body{background:var(--bg);color:var(--deep);font-family:'DM Sans',sans-serif;ove
 .lbar{width:0;height:1px;background:linear-gradient(90deg,transparent,var(--ac),transparent);animation:lbar 1.5s ease forwards;}
 @keyframes lbar{to{width:200px;}}
 .lsub{font-size:0.6rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--mu);}
-
-${PW ? `/* PASSWORD */
-#pwg{position:fixed;inset:0;z-index:8800;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:linear-gradient(160deg,${C1},${C2},${C3});}
+${PW ? `#pwg{position:fixed;inset:0;z-index:8800;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:linear-gradient(160deg,${C1},${C2},${C3});}
 #pwg.show{display:flex;}
-.pwname{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,10vw,6rem);font-weight:300;color:#fff;letter-spacing:0.1em;}
+.pwname{font-family:'Cormorant Garamond',serif;font-size:clamp(2.5rem,10vw,6rem);font-weight:300;color:#fff;letter-spacing:0.1em;text-align:center;}
 .pwsub{font-size:0.68rem;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.48);}
-.pwrow{display:flex;gap:9px;margin-top:6px;}
+.pwrow{display:flex;gap:9px;margin-top:6px;flex-wrap:wrap;justify-content:center;padding:0 16px;}
 .pwinput{padding:13px 18px;border-radius:11px;border:1px solid rgba(255,255,255,0.22);background:rgba(255,255,255,0.12);backdrop-filter:blur(10px);color:#fff;font-family:'DM Sans',sans-serif;font-size:1rem;outline:none;letter-spacing:0.15em;text-align:center;width:170px;}
 .pwinput::placeholder{color:rgba(255,255,255,0.38);letter-spacing:0.05em;}
 .pwbtn{padding:13px 18px;border-radius:11px;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.25);color:#fff;font-family:'DM Sans',sans-serif;cursor:pointer;transition:background 0.2s;}
 .pwbtn:hover{background:rgba(255,255,255,0.26);}
 .pwerr{font-size:0.7rem;color:rgba(255,180,180,0.9);min-height:16px;}` : ''}
-
-/* CURSOR */
 .cur{position:fixed;width:8px;height:8px;background:var(--ac);border-radius:50%;pointer-events:none;z-index:8000;transform:translate(-50%,-50%);}
 .curg{position:fixed;width:30px;height:30px;border-radius:50%;background:rgba(120,160,255,0.26);pointer-events:none;z-index:7999;transform:translate(-50%,-50%);filter:blur(7px);}
-
-/* MUSIC */
-.mbtn{position:fixed;right:18px;bottom:18px;width:50px;height:50px;border-radius:50%;border:1px solid rgba(180,210,255,0.38);background:var(--card);backdrop-filter:blur(18px);box-shadow:0 6px 26px rgba(120,160,240,0.2);cursor:none;z-index:500;font-size:1.2rem;display:flex;align-items:center;justify-content:center;transition:transform 0.3s;}
+.mbtn{position:fixed;right:18px;bottom:18px;width:50px;height:50px;border-radius:50%;border:1px solid rgba(180,210,255,0.38);background:var(--card);backdrop-filter:blur(18px);box-shadow:0 6px 26px rgba(120,160,240,0.2);cursor:pointer;z-index:500;font-size:1.2rem;display:flex;align-items:center;justify-content:center;transition:transform 0.3s;}
 .mbtn:hover{transform:scale(1.1);}
 .mbtn.play{animation:mpulse 2s ease infinite;}
 @keyframes mpulse{0%,100%{box-shadow:0 0 0 0 rgba(120,160,255,0.35);}50%{box-shadow:0 0 0 11px rgba(120,160,255,0);}}
-
-/* HEARTS */
 .hrt{position:fixed;bottom:-20px;pointer-events:none;z-index:2;animation:hup 8s linear forwards;opacity:0;}
 @keyframes hup{0%{opacity:0;}8%{opacity:0.46;}50%{transform:translateY(-50vh);opacity:0.3;}100%{transform:translateY(-115vh);opacity:0;}}
-
-/* CONFETTI */
 .cof{position:fixed;top:-20px;pointer-events:none;z-index:9000;border-radius:2px;animation:cffall linear forwards;}
 @keyframes cffall{to{transform:translateY(105vh) rotate(720deg);opacity:0;}}
-
-/* BG BLOBS */
 .bgl{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
 .blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:0.25;animation:bfloat linear infinite;}
 .b1{width:500px;height:500px;background:${BL};top:-110px;left:-70px;animation-duration:22s;}
 .b2{width:400px;height:400px;background:${BL};bottom:4%;right:-55px;animation-duration:28s;animation-delay:-10s;}
 .b3{width:300px;height:300px;background:${BL};top:38%;left:26%;animation-duration:19s;animation-delay:-5s;}
 @keyframes bfloat{0%,100%{transform:translateY(0) scale(1);}33%{transform:translateY(-25px) scale(1.04);}66%{transform:translateY(17px) scale(0.97);}}
-
-/* REVEAL */
 .rv{opacity:0;transform:translateY(36px);transition:opacity 1s cubic-bezier(.16,1,.3,1),transform 1s cubic-bezier(.16,1,.3,1);}
 .rv.show{opacity:1;transform:none;}
-
-/* HERO */
 .hero{position:relative;z-index:1;min-height:100vh;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 24px;}
 .hbg{position:absolute;inset:0;z-index:-1;transform:scale(1.06);animation:hzoom 20s linear infinite alternate;background:linear-gradient(160deg,${C1} 0%,${C1}cc 20%,${C2} 50%,${C3} 72%,${BL} 100%);}
 .hbg::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(255,255,255,0.06),transparent 70%),linear-gradient(to bottom,rgba(0,0,0,0.07),rgba(5,15,50,0.56));}
 @keyframes hzoom{from{transform:scale(1.06);}to{transform:scale(1.22);}}
 .stars{position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(1px 1px at 12% 18%,rgba(255,255,255,0.8),transparent),radial-gradient(1px 1px at 37% 9%,rgba(255,255,255,0.6),transparent),radial-gradient(1px 1px at 68% 26%,rgba(255,255,255,0.7),transparent),radial-gradient(1px 1px at 82% 13%,rgba(255,255,255,0.5),transparent),radial-gradient(2px 2px at 23% 55%,rgba(255,255,255,0.36),transparent),radial-gradient(1px 1px at 91% 44%,rgba(255,255,255,0.55),transparent);}
-.hcon{position:relative;z-index:2;}
+.hcon{position:relative;z-index:2;width:100%;}
 .hey{font-size:0.68rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-bottom:18px;animation:fdown 1s 2s both;}
-.hname{font-family:'Cormorant Garamond',serif;font-size:clamp(5rem,14vw,11rem);font-weight:300;line-height:1;color:#fff;letter-spacing:0.1em;text-shadow:0 4px 56px rgba(100,150,255,0.45);animation:fdown 1s 2.2s both;position:relative;display:inline-block;}
+.hname{font-family:'Cormorant Garamond',serif;font-size:clamp(4rem,14vw,11rem);font-weight:300;line-height:1;color:#fff;letter-spacing:0.1em;text-shadow:0 4px 56px rgba(100,150,255,0.45);animation:fdown 1s 2.2s both;position:relative;display:inline-block;}
 .hname::after{content:'';position:absolute;bottom:-5px;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.5),transparent);animation:lscale 1.2s 3s both;transform-origin:center;transform:scaleX(0);}
 @keyframes lscale{to{transform:scaleX(1);}}
-.hsub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.1rem,3vw,1.65rem);color:rgba(255,255,255,0.5);margin-top:18px;animation:fdown 1s 2.4s both;}
+.hsub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1rem,3vw,1.65rem);color:rgba(255,255,255,0.5);margin-top:18px;animation:fdown 1s 2.4s both;}
 .hint{max-width:440px;font-size:0.86rem;line-height:1.9;color:rgba(255,255,255,0.4);margin:24px auto 0;animation:fdown 1s 2.6s both;}
-.cdw{display:flex;gap:22px;justify-content:center;margin-top:32px;animation:fdown 1s 2.8s both;}
-.cdb{text-align:center;}.cdn{font-family:'Cormorant Garamond',serif;font-size:2.3rem;font-weight:300;color:#fff;line-height:1;}
+.cdw{display:flex;gap:16px;justify-content:center;margin-top:32px;animation:fdown 1s 2.8s both;flex-wrap:wrap;}
+.cdb{text-align:center;}.cdn{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,5vw,2.3rem);font-weight:300;color:#fff;line-height:1;}
 .cdlbl{font-size:0.56rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.36);margin-top:3px;}
 .cdsp{font-family:'Cormorant Garamond',serif;font-size:1.85rem;color:rgba(255,255,255,0.26);padding-top:3px;}
 .hscroll{position:absolute;bottom:32px;display:flex;flex-direction:column;align-items:center;gap:8px;animation:fdown 1s 3.2s both;color:rgba(255,255,255,0.3);font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;}
 .hscroll-line{width:1px;height:36px;background:linear-gradient(to bottom,rgba(255,255,255,0.36),transparent);animation:sline 1.8s ease infinite;}
 @keyframes sline{0%,100%{transform:scaleY(1);opacity:1;}50%{transform:scaleY(0.36);opacity:0.26;}}
 @keyframes fdown{from{opacity:0;transform:translateY(-16px);}to{opacity:1;transform:none;}}
-
-/* SECTIONS */
 .sec{position:relative;z-index:1;padding:96px 24px;}
 .si{max-width:1080px;margin:0 auto;}
 .sh{text-align:center;margin-bottom:58px;}
 .stag{font-size:0.63rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--ac);margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:12px;}
 .stag::before,.stag::after{content:'';width:24px;height:1px;background:var(--c2);opacity:0.48;}
-.stitle{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,5vw,3.3rem);font-weight:600;color:var(--deep);line-height:1.15;}
+.stitle{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,5vw,3.3rem);font-weight:600;color:var(--deep);line-height:1.15;}
 .stitle em{font-style:italic;color:var(--ac);}
-
-/* CARDS */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:18px;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(270px,100%),1fr));gap:18px;}
 .card{background:var(--card);backdrop-filter:blur(22px);border:1px solid rgba(180,210,255,0.3);border-radius:18px;padding:26px;transition:transform 0.35s cubic-bezier(.16,1,.3,1),box-shadow 0.35s;}
 .card:hover{transform:translateY(-6px);box-shadow:0 18px 46px rgba(120,160,240,0.16);}
-.card-e{font-size:2rem;display:block;margin-bottom:10px;animation:efloa 3s ease-in-out infinite;}
-@keyframes efloa{0%,100%{transform:translateY(0) rotate(-3deg);}50%{transform:translateY(-7px) rotate(3deg);}}
+.card-e{font-size:2rem;display:block;margin-bottom:10px;}
 .card-sub{font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ac);opacity:0.7;margin-bottom:4px;}
 .card-t{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:600;color:var(--deep);margin-bottom:7px;}
 .card-d{font-size:0.8rem;line-height:1.8;color:var(--mu);}
-
-/* FEELINGS */
-.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(250px,100%),1fr));gap:14px;}
 .feel-card{background:var(--card);backdrop-filter:blur(18px);border:1px solid rgba(180,210,255,0.26);border-radius:16px;padding:22px;display:flex;gap:13px;align-items:flex-start;}
 .feel-e{font-size:1.75rem;flex-shrink:0;margin-top:2px;}
 .feel-t{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:var(--deep);line-height:1.6;}
-
-/* PHOTOS */
-.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(170px,45%),1fr));gap:12px;}
 .p-item{border-radius:12px;overflow:hidden;aspect-ratio:1;}
 .p-item img{width:100%;height:100%;object-fit:cover;cursor:pointer;transition:transform 0.4s cubic-bezier(.16,1,.3,1);}
 .p-item:hover img{transform:scale(1.06);}
-
-/* LIGHTBOX */
 .lb{position:fixed;inset:0;z-index:2000;background:rgba(10,20,60,0.92);backdrop-filter:blur(22px);display:none;align-items:center;justify-content:center;}
 .lb.open{display:flex;}
 .lb img{max-width:90vw;max-height:90vh;border-radius:11px;box-shadow:0 36px 90px rgba(0,0,0,0.46);}
 .lbclose{position:absolute;top:22px;right:26px;font-size:1.85rem;color:#fff;opacity:0.48;cursor:pointer;background:none;border:none;transition:opacity 0.2s;}
 .lbclose:hover{opacity:1;}
-
-/* LETTER */
 .lsec{position:relative;z-index:1;padding:0 24px 96px;}
-.lcard{max-width:650px;margin:0 auto;background:var(--card);backdrop-filter:blur(22px);border:1px solid rgba(180,210,255,0.36);border-radius:24px;padding:56px 48px;text-align:center;box-shadow:0 28px 72px rgba(120,160,240,0.08);position:relative;overflow:hidden;}
+.lcard{max-width:650px;margin:0 auto;background:var(--card);backdrop-filter:blur(22px);border:1px solid rgba(180,210,255,0.36);border-radius:24px;padding:clamp(28px,6vw,56px) clamp(18px,5vw,48px);text-align:center;box-shadow:0 28px 72px rgba(120,160,240,0.08);position:relative;overflow:hidden;}
 .lcard::before{content:'💙';position:absolute;top:-14px;left:50%;transform:translateX(-50%);font-size:2rem;}
 .ldeco{position:absolute;font-size:8rem;opacity:0.028;font-family:'Cormorant Garamond',serif;top:8px;right:14px;color:var(--ac);pointer-events:none;}
-.lgreet{font-family:'Cormorant Garamond',serif;font-size:clamp(1.7rem,4vw,2.6rem);font-weight:600;color:var(--deep);margin-bottom:7px;}
+.lgreet{font-family:'Cormorant Garamond',serif;font-size:clamp(1.4rem,4vw,2.6rem);font-weight:600;color:var(--deep);margin-bottom:7px;}
 .ldate{font-size:0.63rem;letter-spacing:0.2em;color:var(--mu);margin-bottom:26px;display:block;text-transform:uppercase;}
 .lbody{font-size:0.88rem;line-height:2.05;color:var(--mu);text-align:left;white-space:pre-wrap;}
 .lsig{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.32rem;color:var(--ac);margin-top:28px;display:block;}
-
-/* HIDDEN MSG */
 ${HID ? `.htrig{text-align:center;padding:0 24px 76px;position:relative;z-index:1;}
 .hbtn{background:transparent;border:1px solid rgba(120,160,255,0.22);color:var(--mu);padding:11px 26px;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:0.72rem;letter-spacing:0.14em;cursor:pointer;transition:all 0.3s;}
 .hbtn:hover{background:rgba(120,160,255,0.07);color:var(--ac);border-color:var(--ac);}
@@ -1661,33 +1869,35 @@ ${HID ? `.htrig{text-align:center;padding:0 24px 76px;position:relative;z-index:
 .hmx{position:absolute;top:22px;right:26px;font-size:1.85rem;color:rgba(255,255,255,0.36);cursor:pointer;background:none;border:none;transition:color 0.2s;}
 .hmx:hover{color:#fff;}
 .hmcon{position:relative;z-index:1;}
-.hmtxt{font-family:'Cormorant Garamond',serif;font-size:clamp(1.35rem,4vw,2.5rem);font-weight:300;color:#fff;line-height:1.75;max-width:620px;}
+.hmtxt{font-family:'Cormorant Garamond',serif;font-size:clamp(1.1rem,4vw,2.5rem);font-weight:300;color:#fff;line-height:1.75;max-width:620px;}
 .hmtxt em{font-style:italic;color:${BL};}
 .hmhrt{font-size:1.85rem;margin-top:28px;letter-spacing:0.3em;animation:hbeat 1.5s infinite;}` : ''}
-
-/* FOOTER */
 footer{position:relative;z-index:1;text-align:center;padding:44px 24px 68px;border-top:1px solid rgba(180,210,255,0.2);}
 .fhrt{font-size:1.85rem;display:block;margin-bottom:13px;animation:hbeat 1.5s infinite;}
 @keyframes hbeat{0%,100%{transform:scale(1);}14%{transform:scale(1.17);}28%{transform:scale(1);}42%{transform:scale(1.09);}56%{transform:scale(1);}}
 .fquote{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:var(--mu);}
 .fname{font-size:0.65rem;color:var(--mu);opacity:0.36;margin-top:7px;letter-spacing:0.1em;}
 @keyframes fadein{from{opacity:0;}to{opacity:1;}}
-
 @media(max-width:640px){
   body{cursor:auto;}.cur,.curg{display:none;}
-  .lcard{padding:44px 18px;}.sec{padding:68px 16px;}
-  .hname{font-size:clamp(4rem,16vw,7rem);}
+  .lcard{padding:36px 18px;}
+  .sec{padding:60px 16px;}
+  .lsec{padding:0 16px 72px;}
+  .hname{font-size:clamp(3.5rem,16vw,6rem);}
+  .grid{grid-template-columns:1fr;}
+  .fgrid{grid-template-columns:1fr;}
+  .pgrid{grid-template-columns:repeat(2,1fr);gap:8px;}
+  .cdw{gap:12px;}
+  .mbtn{bottom:calc(18px + env(safe-area-inset-bottom,0px));}
 }
 </style>
 </head>
 <body>
-
 <div id="ldr">
   <span class="lname">${N}</span>
   <div class="lbar"></div>
   <span class="lsub">дурсамжууд ачаалж байна</span>
 </div>
-
 ${PW ? `<div id="pwg">
   <div class="pwname">${N}</div>
   <div class="pwsub">нууц үг оруулна уу</div>
@@ -1697,17 +1907,14 @@ ${PW ? `<div id="pwg">
   </div>
   <div class="pwerr" id="pwe"></div>
 </div>` : ''}
-
 <div class="cur" id="cur"></div>
 <div class="curg" id="curg"></div>
 <audio id="bgm" loop></audio>
 <button class="mbtn" id="mb">🎵</button>
-
 <div class="lb" id="lb">
   <button class="lbclose" onclick="document.getElementById('lb').classList.remove('open')">✕</button>
   <img id="lbimg" src="" alt="">
 </div>
-
 ${HID ? `<div class="hmsg" id="hmsg">
   <div class="hmbg"></div>
   <button class="hmx" onclick="document.getElementById('hmsg').classList.remove('open')">✕</button>
@@ -1716,9 +1923,7 @@ ${HID ? `<div class="hmsg" id="hmsg">
     <div class="hmhrt">💙 💫 💙</div>
   </div>
 </div>` : ''}
-
 <div class="bgl"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
-
 <section class="hero">
   <div class="hbg"></div>
   <div class="stars"></div>
@@ -1737,25 +1942,21 @@ ${HID ? `<div class="hmsg" id="hmsg">
   </div>
   <div class="hscroll"><div class="hscroll-line"></div>доош гүйлгэ</div>
 </section>
-
 ${acts.length ? `<section class="sec">
 <div class="si">
   <div class="sh rv"><p class="stag">Бидний хамт</p><h2 class="stitle">Хамтдаа <em>хийсэн зүйлс</em></h2></div>
   <div class="grid">${actsHTML}</div>
 </div></section>` : ''}
-
 ${feelings.length ? `<section class="sec" style="padding-top:0">
 <div class="si">
   <div class="sh rv"><p class="stag">Мэдрэмж</p><h2 class="stitle"><em>Санасан</em> зүйлс</h2></div>
   <div class="fgrid">${feelHTML}</div>
 </div></section>` : ''}
-
 ${photos.length ? `<section class="sec" style="padding-top:0">
 <div class="si">
   <div class="sh rv"><p class="stag">Дурсамж зурагнууд</p><h2 class="stitle">Бидний <em>фото</em></h2></div>
   <div class="pgrid">${photoHTML}</div>
 </div></section>` : ''}
-
 <section class="lsec">
   <div class="sh rv" style="text-align:center;margin-bottom:44px;">
     <p class="stag">Зүрхний үгнүүд</p>
@@ -1769,90 +1970,81 @@ ${photos.length ? `<section class="sec" style="padding-top:0">
     <span class="lsig">${SIG}</span>
   </div>
 </section>
-
 ${HID ? `<div class="htrig"><button class="hbtn" onclick="document.getElementById('hmsg').classList.add('open')">💙 &nbsp; Нууц захиа</button></div>` : ''}
-
 <footer>
   <span class="fhrt">💙</span>
   <p class="fquote">"${QUO}"</p>
   <p class="fname">${N}д зориулав • 2025</p>
 </footer>
-
 <script>
-const PHOTOS = [${photosJS}];
-function openLb(i){ document.getElementById('lbimg').src=PHOTOS[i]; document.getElementById('lb').classList.add('open'); }
-document.getElementById('lb').addEventListener('click', function(e){ if(e.target===this) this.classList.remove('open'); });
-
+const PHOTOS=[${photosJS}];
+function openLb(i){document.getElementById('lbimg').src=PHOTOS[i];document.getElementById('lb').classList.add('open');}
+document.getElementById('lb').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
 ${PW ? `function chkPw(){
-  if(document.getElementById('pwi').value === ${JSON.stringify(PW)}){
-    document.getElementById('pwg').style.display='none'; startSite();
-  } else {
+  if(document.getElementById('pwi').value===${JSON.stringify(PW)}){
+    document.getElementById('pwg').style.display='none';startSite();
+  }else{
     document.getElementById('pwe').textContent='Буруу нууц үг. Дахин оролдоно уу.';
     document.getElementById('pwi').value='';
   }
 }
-document.getElementById('pwi').addEventListener('keydown', e=>{ if(e.key==='Enter') chkPw(); });
+document.getElementById('pwi').addEventListener('keydown',e=>{if(e.key==='Enter')chkPw();});
 document.getElementById('pwg').classList.add('show');` : ''}
-
 function startSite(){
   document.getElementById('ldr').classList.add('gone');
-  setTimeout(()=>{ document.getElementById('ldr').style.display='none'; initReveal(); fireConfetti(); }, 1200);
+  setTimeout(()=>{document.getElementById('ldr').style.display='none';initReveal();fireConfetti();},1200);
 }
-
-window.addEventListener('load', ()=>{
-  const now = new Date();
-  document.getElementById('ldt').textContent =
-    now.getFullYear()+'.'+(now.getMonth()+1).toString().padStart(2,'0')+'.'+now.getDate().toString().padStart(2,'0');
+window.addEventListener('load',()=>{
+  const now=new Date();
+  document.getElementById('ldt').textContent=now.getFullYear()+'.'+(now.getMonth()+1).toString().padStart(2,'0')+'.'+now.getDate().toString().padStart(2,'0');
   ${c.date ? `(function tick(){
-    const d = Date.now() - new Date('${c.date}').getTime();
-    if(d > 0){
-      document.getElementById('cdD').textContent = Math.floor(d/86400000);
-      document.getElementById('cdH').textContent = Math.floor((d%86400000)/3600000);
-      document.getElementById('cdM').textContent = Math.floor((d%3600000)/60000);
+    const d=Date.now()-new Date('${c.date}').getTime();
+    if(d>0){
+      document.getElementById('cdD').textContent=Math.floor(d/86400000);
+      document.getElementById('cdH').textContent=Math.floor((d%86400000)/3600000);
+      document.getElementById('cdM').textContent=Math.floor((d%3600000)/60000);
     }
-    setTimeout(tick, 60000);
+    setTimeout(tick,60000);
   })();` : ''}
-  ${PW ? '' : 'setTimeout(startSite, 2100);'}
-  initCursor(); startHearts();
+  ${PW ? '' : 'setTimeout(startSite,2100);'}
+  initCursor();startHearts();
 });
-
 function initReveal(){
-  const obs = new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('show'); }), {threshold:0.08});
+  const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('show');}),{threshold:0.08});
   document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
 }
 function initCursor(){
-  const d=document.getElementById('cur'), g=document.getElementById('curg');
+  const d=document.getElementById('cur'),g=document.getElementById('curg');
   let gx=0,gy=0,mx=0,my=0;
-  document.addEventListener('mousemove',e=>{ mx=e.clientX;my=e.clientY;d.style.left=mx+'px';d.style.top=my+'px'; });
-  (function a(){ gx+=(mx-gx)*0.1;gy+=(my-gy)*0.1;g.style.left=gx+'px';g.style.top=gy+'px';requestAnimationFrame(a); })();
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;d.style.left=mx+'px';d.style.top=my+'px';});
+  (function a(){gx+=(mx-gx)*0.1;gy+=(my-gy)*0.1;g.style.left=gx+'px';g.style.top=gy+'px';requestAnimationFrame(a);})();
 }
 function startHearts(){
   setInterval(()=>{
-    const h=document.createElement('div'); h.className='hrt'; h.textContent='💙';
+    const h=document.createElement('div');h.className='hrt';h.textContent='💙';
     h.style.left=Math.random()*100+'vw';
     h.style.fontSize=(13+Math.random()*11)+'px';
     h.style.animationDuration=(7+Math.random()*5)+'s';
-    document.body.appendChild(h); setTimeout(()=>h.remove(),13000);
-  }, 2600);
+    document.body.appendChild(h);setTimeout(()=>h.remove(),13000);
+  },2600);
 }
 function fireConfetti(){
   const cols=['${BL}','${C3}','${AC}','#ffffff'];
-  for(let i=0;i<65;i++) setTimeout(()=>{
-    const el=document.createElement('div'); el.className='cof';
+  for(let i=0;i<65;i++)setTimeout(()=>{
+    const el=document.createElement('div');el.className='cof';
     el.style.cssText='left:'+Math.random()*100+'vw;width:'+(5+Math.random()*6)+'px;height:'+(5+Math.random()*6)+'px;background:'+cols[Math.floor(Math.random()*cols.length)]+';animation-duration:'+(1.8+Math.random()*2)+'s;';
-    document.body.appendChild(el); setTimeout(()=>el.remove(),4000);
-  }, i*32);
+    document.body.appendChild(el);setTimeout(()=>el.remove(),4000);
+  },i*32);
 }
 window.addEventListener('scroll',()=>{
-  const s=window.scrollY, bg=document.querySelector('.hbg');
-  if(bg) bg.style.transform='scale(1.12) translateY('+s*0.27+'px)';
+  const s=window.scrollY,bg=document.querySelector('.hbg');
+  if(bg)bg.style.transform='scale(1.12) translateY('+s*0.27+'px)';
 });
 const mb=document.getElementById('mb');
 mb.addEventListener('click',()=>{
   const a=document.getElementById('bgm');
-  if(!a.src || a.src===location.href) return;
-  a.paused ? (a.play().catch(()=>{}),mb.textContent='🔊',mb.classList.add('play'))
-           : (a.pause(),mb.textContent='🎵',mb.classList.remove('play'));
+  if(!a.src||a.src===location.href)return;
+  a.paused?(a.play().catch(()=>{}),mb.textContent='🔊',mb.classList.add('play')):(a.pause(),mb.textContent='🎵',mb.classList.remove('play'));
 });
 <\/script>
 </body>
